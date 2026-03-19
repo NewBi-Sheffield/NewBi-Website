@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/((?!coming-soon|api|_next|favicon.ico|logo.svg).*)",
+        source: "/((?!coming-soon|api|_next|favicon.ico|.*\\.png|.*\\.svg|.*\\.ico).*)",
         destination: "/coming-soon",
         permanent: false,
       },

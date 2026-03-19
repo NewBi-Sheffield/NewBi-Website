@@ -61,7 +61,7 @@ export default function ProviderSearch({ providers }: Props) {
           placeholder="Search by business name..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-3.5 text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#a5de57]/40 focus:border-transparent"
+          className="w-full pl-12 pr-4 py-3.5 text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
         />
       </div>
 
@@ -75,8 +75,8 @@ export default function ProviderSearch({ providers }: Props) {
               onClick={() => setCategory(c)}
               className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 active
-                  ? "bg-gradient-to-r from-[#125a40] to-[#a5de57] text-white shadow-sm"
-                  : "bg-white/5 border border-white/10 text-slate-400 hover:border-[#a5de57]/50 hover:text-[#a5de57]"
+                  ? "bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white shadow-sm"
+                  : "bg-white/5 border border-white/10 text-slate-400 hover:border-[#45c97a]/50 hover:text-[#45c97a]"
               }`}
             >
               {c === "All" ? "All Services" : c}

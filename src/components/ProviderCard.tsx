@@ -10,7 +10,7 @@ export default function ProviderCard({ provider }: Props) {
   const count = provider.reviews.length;
 
   return (
-    <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-5 flex flex-col hover:border-[#a5de57]/30 transition-colors duration-200">
+    <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-5 flex flex-col hover:border-[#45c97a]/30 transition-colors duration-200">
       {/* Name + rating row */}
       <div className="flex items-start justify-between gap-2 mb-2">
         <h2 className="text-base font-bold text-white leading-tight">{provider.name}</h2>
@@ -22,7 +22,7 @@ export default function ProviderCard({ provider }: Props) {
       </div>
 
       {/* Category badge */}
-      <span className="inline-block self-start text-xs font-medium text-[#a5de57] bg-[#a5de57]/10 px-2.5 py-0.5 rounded-full mb-3">
+      <span className="inline-block self-start text-xs font-medium text-[#45c97a] bg-[#45c97a]/10 px-2.5 py-0.5 rounded-full mb-3">
         {provider.category}
       </span>
 
@@ -55,7 +55,7 @@ export default function ProviderCard({ provider }: Props) {
       {/* CTA button */}
       <Link
         href={`/providers/${provider.id}`}
-        className="block w-full text-center bg-gradient-to-r from-[#125a40] to-[#a5de57] text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all"
+        className="block w-full text-center bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all"
       >
         View details
       </Link>

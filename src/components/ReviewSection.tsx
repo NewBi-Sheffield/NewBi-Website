@@ -62,7 +62,7 @@ export default function ReviewSection({ providerId, reviews }: Props) {
         {!submitted && !showForm && (
           <button
             onClick={handleWriteReview}
-            className="flex items-center gap-1.5 text-sm font-semibold bg-gradient-to-r from-[#125a40] to-[#a5de57] text-white px-4 py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all"
+            className="flex items-center gap-1.5 text-sm font-semibold bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white px-4 py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -110,7 +110,7 @@ export default function ReviewSection({ providerId, reviews }: Props) {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Share your experience..."
-                className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a5de57]/40 focus:border-transparent resize-none"
+                className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent resize-none"
               />
             </div>
 
@@ -122,7 +122,7 @@ export default function ReviewSection({ providerId, reviews }: Props) {
               <button
                 type="submit"
                 disabled={rating === 0 || submitting}
-                className="bg-gradient-to-r from-[#125a40] to-[#a5de57] text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                className="bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 {submitting ? "Submitting..." : "Submit review"}
               </button>

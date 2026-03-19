@@ -40,7 +40,7 @@ export default function ContactPage() {
             </p>
             <Link
               href="/"
-              className="mt-6 inline-block bg-gradient-to-r from-[#125a40] to-[#a5de57] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+              className="mt-6 inline-block bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white px-6 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
             >
               Back to search
             </Link>
@@ -95,7 +95,7 @@ export default function ContactPage() {
                 value={form.name}
                 onChange={handleChange}
                 placeholder="Jane Smith"
-                className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a5de57]/40 focus:border-transparent"
+                className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
               />
             </div>
             <div>
@@ -110,7 +110,7 @@ export default function ContactPage() {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="jane@example.com"
-                className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a5de57]/40 focus:border-transparent"
+                className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
               />
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function ContactPage() {
                   value={form.business}
                   onChange={handleChange}
                   placeholder="Sheffield Plumbing Co."
-                  className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a5de57]/40 focus:border-transparent"
+                  className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
                 />
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
@@ -145,7 +145,7 @@ export default function ContactPage() {
                     value={form.category}
                     onChange={handleChange}
                     placeholder="e.g. Hair, Nails, Braiding"
-                    className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a5de57]/40 focus:border-transparent"
+                    className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -159,7 +159,7 @@ export default function ContactPage() {
                     value={form.phone}
                     onChange={handleChange}
                     placeholder="0114 000 0000"
-                    className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a5de57]/40 focus:border-transparent"
+                    className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -183,13 +183,13 @@ export default function ContactPage() {
                   ? "Describe your services, coverage area, and anything else you'd like on your listing..."
                   : "Share your idea, feedback, or recommendation..."
               }
-              className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a5de57]/40 focus:border-transparent resize-none"
+              className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent resize-none"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-[#125a40] to-[#a5de57] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
+            className="w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
           >
             {formType === "list-provider" ? "Submit listing request" : "Send suggestion"}
           </button>
