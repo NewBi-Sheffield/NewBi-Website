@@ -44,6 +44,35 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure handle_new_user();
 
+create table if not exists listing_requests (
+  id uuid default gen_random_uuid() primary key,
+  name text not null,
+  email text not null,
+  business text not null,
+  category text not null,
+  phone text,
+  message text not null,
+  created_at timestamptz default now()
+);
+
+create table if not exists suggestions (
+  id uuid default gen_random_uuid() primary key,
+  name text not null,
+  email text not null,
+  message text not null,
+  created_at timestamptz default now()
+);
+
+-- Row level security
+alter table listing_requests enable row level security;
+alter table suggestions enable row level security;
+
+create policy "Anyone can insert listing requests"
+  on listing_requests for insert with check (true);
+
+create policy "Anyone can insert suggestions"
+  on suggestions for insert with check (true);
+
 -- Row level security
 alter table providers enable row level security;
 alter table reviews enable row level security;

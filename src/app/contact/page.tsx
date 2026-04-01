@@ -9,6 +9,8 @@ type FormType = "list-provider" | "suggestion";
 export default function ContactPage() {
   const [formType, setFormType] = useState<FormType>("list-provider");
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -22,8 +24,26 @@ export default function ContactPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const endpoint = formType === "suggestion" ? "/api/suggestions" : "/api/listing-requests";
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    setLoading(false);
+
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error ?? "Something went wrong. Please try again.");
+      return;
+    }
+
     setSubmitted(true);
   }
 
@@ -187,11 +207,19 @@ export default function ContactPage() {
             />
           </div>
 
+          {error && (
+            <p className="text-xs text-red-400 bg-red-900/20 px-3 py-2 rounded-lg">{error}</p>
+          )}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {formType === "list-provider" ? "Submit listing request" : "Send suggestion"}
+            {loading
+              ? "Sending…"
+              : formType === "list-provider"
+              ? "Submit listing request"
+              : "Send suggestion"}
           </button>
         </form>
       </div>

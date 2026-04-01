@@ -11,6 +11,7 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from") ?? "/";
+  const resetSuccess = searchParams.get("reset") === "success";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +33,11 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      {resetSuccess && (
+        <p className="text-xs text-green-400 bg-green-900/20 px-3 py-2 rounded-lg">
+          Password updated successfully. Log in with your new password.
+        </p>
+      )}
       <div>
         <label className="block text-xs font-semibold text-slate-300 mb-1" htmlFor="email">
           Email address
@@ -61,7 +67,7 @@ function LoginForm() {
         />
         <p className="text-xs text-slate-500 mt-1.5">
           Forgot your password?{" "}
-          <span className="text-[#45c97a] cursor-pointer hover:underline">Reset it</span>
+          <Link href="/forgot-password" className="text-[#45c97a] hover:underline">Reset it</Link>
         </p>
       </div>
       {error && (
