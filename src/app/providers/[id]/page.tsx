@@ -1,5 +1,10 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { getProvider, averageRating } from "@/lib/db";
+
+function toTitleCase(s: string) {
+  return s.replace(/\b\w/g, (c) => c.toUpperCase());
+}
 import PageHeader from "@/components/PageHeader";
 import ReviewSection from "@/components/ReviewSection";
 
@@ -31,10 +36,35 @@ export default async function ProviderPage({ params }: Props) {
 
           {/* Info card */}
           <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-6">
-            <div className="flex items-start justify-between gap-3 mb-4">
-              <span className="inline-block text-sm font-medium text-[#45c97a] bg-[#45c97a]/10 px-3 py-1 rounded-full">
-                {provider.category}
-              </span>
+            {/* Profile picture */}
+            <div className="flex items-center gap-4 mb-4">
+              {provider.profile_picture_url ? (
+                <Image
+                  src={provider.profile_picture_url}
+                  alt={provider.name}
+                  width={80}
+                  height={80}
+                  className="rounded-full object-cover border-2 border-white/10 shrink-0"
+                />
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-[#1a3550] border-2 border-white/10 flex items-center justify-center shrink-0">
+                  <span className="text-3xl font-bold text-slate-500">
+                    {provider.name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
+              <div>
+                <h1 className="text-xl font-bold text-white">{provider.name}</h1>
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {provider.categories.map((cat) => (
+                    <span key={cat} className="inline-block text-sm font-medium text-[#45c97a] bg-[#45c97a]/10 px-3 py-1 rounded-full">
+                      {toTitleCase(cat)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end mb-4">
               <div className="flex items-center gap-1.5 shrink-0">
                 <span className="text-yellow-400 text-xl">★</span>
                 <span className="text-lg font-bold text-white">{avg.toFixed(1)}</span>
@@ -43,7 +73,10 @@ export default async function ProviderPage({ params }: Props) {
                 </span>
               </div>
             </div>
-            <p className="text-slate-300 leading-relaxed">{provider.description}</p>
+            <div
+              className="text-slate-300 leading-relaxed [&_p]:my-1 [&_a]:text-[#45c97a] [&_a]:underline [&_a]:hover:opacity-80 [&_strong]:text-white [&_em]:italic"
+              dangerouslySetInnerHTML={{ __html: provider.description }}
+            />
           </div>
 
           {/* Reviews (client component handles auth + form) */}
@@ -97,6 +130,25 @@ export default async function ProviderPage({ params }: Props) {
                 </div>
               )}
 
+              {provider.website && (
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-[#45c97a] mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
+                  </svg>
+                  <div>
+                    <p className="text-xs text-slate-500 mb-0.5">Website</p>
+                    <a
+                      href={provider.website.startsWith("http") ? provider.website : `https://${provider.website}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#45c97a] font-semibold hover:underline text-sm"
+                    >
+                      Visit website
+                    </a>
+                  </div>
+                </div>
+              )}
+
               {provider.instagram && (
                 <div className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-[#45c97a] mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
@@ -105,12 +157,14 @@ export default async function ProviderPage({ params }: Props) {
                   <div>
                     <p className="text-xs text-slate-500 mb-0.5">Instagram</p>
                     <a
-                      href={provider.instagram}
+                      href={provider.instagram.startsWith("http") ? provider.instagram : `https://instagram.com/${provider.instagram.replace(/^@/, "")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[#45c97a] font-semibold hover:underline text-sm break-all"
                     >
-                      {provider.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//, "@").replace(/\/$/, "")}
+                      {provider.instagram.startsWith("http")
+                        ? provider.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//, "@").replace(/\/$/, "")
+                        : provider.instagram.startsWith("@") ? provider.instagram : `@${provider.instagram}`}
                     </a>
                   </div>
                 </div>
@@ -119,7 +173,13 @@ export default async function ProviderPage({ params }: Props) {
 
             {(provider.instagram ?? provider.email) && (
               <a
-                href={provider.instagram ?? `mailto:${provider.email}`}
+                href={
+                  provider.instagram
+                    ? provider.instagram.startsWith("http")
+                      ? provider.instagram
+                      : `https://instagram.com/${provider.instagram.replace(/^@/, "")}`
+                    : `mailto:${provider.email}`
+                }
                 target={provider.instagram ? "_blank" : undefined}
                 rel={provider.instagram ? "noopener noreferrer" : undefined}
                 className="mt-6 flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white font-semibold py-3 rounded-xl text-sm hover:opacity-90 active:scale-95 transition-all"

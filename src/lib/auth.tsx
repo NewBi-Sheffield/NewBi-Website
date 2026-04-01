@@ -6,6 +6,7 @@ import { supabase } from "./supabase";
 
 type AuthContext = {
   isLoggedIn: boolean;
+  isAdmin: boolean;
   userId: string | null;
   email: string | null;
   name: string | null;
@@ -19,6 +20,7 @@ type AuthContext = {
 
 const Ctx = createContext<AuthContext>({
   isLoggedIn: false,
+  isAdmin: false,
   userId: null,
   email: null,
   name: null,
@@ -75,9 +77,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const name = user?.user_metadata?.full_name ?? null;
+  const isAdmin = !!user?.user_metadata?.is_admin;
 
   return (
-    <Ctx.Provider value={{ isLoggedIn: !!user, userId: user?.id ?? null, email: user?.email ?? null, name, login, signup, updateName, updateEmail, updatePassword, logout }}>
+    <Ctx.Provider value={{ isLoggedIn: !!user, isAdmin, userId: user?.id ?? null, email: user?.email ?? null, name, login, signup, updateName, updateEmail, updatePassword, logout }}>
       {children}
     </Ctx.Provider>
   );

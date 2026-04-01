@@ -8,27 +8,36 @@ type Props = {
   providers: Provider[];
 };
 
+function toTitleCase(s: string) {
+  return s.replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 export default function ProviderSearch({ providers }: Props) {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState("all");
 
   const categories = useMemo(() => {
     const counts = new Map<string, number>();
     for (const p of providers) {
-      counts.set(p.category, (counts.get(p.category) ?? 0) + 1);
+      for (const cat of p.categories) {
+        const key = cat.toLowerCase();
+        counts.set(key, (counts.get(key) ?? 0) + 1);
+      }
     }
     const top5 = [...counts.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
-      .map(([cat]) => cat);
-    return ["All", ...top5];
+      .map(([key]) => key);
+    return ["all", ...top5];
   }, [providers]);
 
   const filtered = useMemo(() => {
     let results = providers;
 
-    if (category !== "All") {
-      results = results.filter((p) => p.category === category);
+    if (category !== "all") {
+      results = results.filter((p) =>
+        p.categories.some((c) => c.toLowerCase() === category)
+      );
     }
 
     if (query.trim()) {
@@ -36,7 +45,7 @@ export default function ProviderSearch({ providers }: Props) {
       results = results.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q) ||
+          p.categories.some((c) => c.toLowerCase().includes(q)) ||
           p.description.toLowerCase().includes(q)
       );
     }
@@ -79,7 +88,7 @@ export default function ProviderSearch({ providers }: Props) {
                   : "bg-white/5 border border-white/10 text-slate-400 hover:border-[#45c97a]/50 hover:text-[#45c97a]"
               }`}
             >
-              {c === "All" ? "All Services" : c}
+              {c === "all" ? "All Services" : toTitleCase(c)}
             </button>
           );
         })}
