@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { randomUUID } from "crypto";
 import providers from "./providers.json";
 
 const supabase = createClient(
@@ -9,9 +10,11 @@ const supabase = createClient(
 async function main() {
   console.log(`Importing ${providers.length} provider(s)...`);
 
+  const rows = providers.map((p) => ({ id: randomUUID(), ...p }));
+
   const { data, error } = await supabase
     .from("providers")
-    .upsert(providers, { onConflict: "name" })
+    .insert(rows)
     .select("id, name");
 
   if (error) {

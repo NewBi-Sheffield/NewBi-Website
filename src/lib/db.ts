@@ -12,6 +12,8 @@ export type Review = {
 
 export type Provider = {
   id: string;
+  user_id: string | null;
+  status: "pending" | "approved" | "rejected" | "unlisted";
   name: string;
   categories: string[];
   description: string;
@@ -28,6 +30,7 @@ export async function getProviders(): Promise<Provider[]> {
   const { data, error } = await supabase
     .from("providers")
     .select("*, reviews(*)")
+    .eq("status", "approved")
     .order("name");
 
   if (error) {
@@ -39,6 +42,7 @@ export async function getProviders(): Promise<Provider[]> {
     ...p,
     categories: p.categories ?? [],
     reviews: p.reviews ?? [],
+    status: (p.status ?? "approved") as Provider["status"],
   }));
 }
 
@@ -47,11 +51,12 @@ export async function getProvider(id: string): Promise<Provider | null> {
     .from("providers")
     .select("*, reviews(*)")
     .eq("id", id)
+    .eq("status", "approved")
     .single();
 
   if (error) return null;
 
-  return { ...data, categories: data.categories ?? [], reviews: data.reviews ?? [] };
+  return { ...data, categories: data.categories ?? [], reviews: data.reviews ?? [], status: (data.status ?? "approved") as Provider["status"] };
 }
 
 export async function insertReview(

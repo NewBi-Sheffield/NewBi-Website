@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1000"
+   height="234.231"
+   viewBox="0 0 264.58332 61.973622"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1"><linearGradient
+       id="swatch3"><stop
+         style="stop-color:#ff0909;stop-opacity:1;"
+         offset="0"
+         id="stop3" /></linearGradient></defs><style
+     id="style8">
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700&amp;display=swap');
+    .wordmark { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 100px; letter-spacing: -3px; }
+  </style><style
+     id="style6">
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700&amp;display=swap');
+    .wordmark { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 100px; letter-spacing: -3px; }
+  </style><g
+     id="g307-9"
+     transform="matrix(0.80026468,0,0,0.80026468,-172.74524,46.065649)"><text
+       x="448.35806"
+       y="152"
+       class="wordmark"
+       fill="#1fc4a0"
+       id="text7-7"
+       style="font-weight:700;font-size:100px;font-family:Outfit, sans-serif;letter-spacing:-3px;fill:#2e86c1;fill-opacity:1">Bi</text><text
+       x="208"
+       y="152"
+       class="wordmark"
+       fill="#c8f135"
+       id="text6-2"
+       style="font-weight:700;font-size:100px;font-family:Outfit, sans-serif;letter-spacing:-3px;fill:#52be80;fill-opacity:1"
+       transform="translate(3.0810934e-6,-1.5971064e-5)">New</text></g><rect
+     style="fill:#0a1628;stroke:#950000;stroke-width:0.270812;stroke-opacity:0.513678"
+     id="rect2"
+     width="266.95834"
+     height="64.34864"
+     x="-1.1875106"
+     y="-1.1875106" /><g
+     id="g307"
+     transform="matrix(0.80026467,0,0,0.80026467,-173.87938,-60.838871)"><text
+       x="208"
+       y="152"
+       class="wordmark"
+       fill="#c8f135"
+       id="text6"
+       style="fill:#52be80;fill-opacity:1">New</text><text
+       x="448.35806"
+       y="152"
+       class="wordmark"
+       fill="#1fc4a0"
+       id="text7"
+       style="fill:#2e86c1;fill-opacity:1">Bi</text></g><rect
+     style="fill:#0a1628;stroke:#950000;stroke-width:1.63669;stroke-opacity:0.513678"
+     id="rect2-1"
+     width="792.11328"
+     height="792.11328"
+     x="337.53098"
+     y="-31.639833" /><g
+     id="g307-7"
+     transform="matrix(1.4679129,0,0,1.4679129,164.84572,176.51481)"><text
+       x="208"
+       y="152"
+       class="wordmark"
+       fill="#c8f135"
+       id="text6-1"
+       style="font-weight:700;font-size:100px;font-family:Outfit, sans-serif;letter-spacing:-3px;fill:#52be80;fill-opacity:1">New</text><text
+       x="448.35806"
+       y="152"
+       class="wordmark"
+       fill="#1fc4a0"
+       id="text7-1"
+       style="font-weight:700;font-size:100px;font-family:Outfit, sans-serif;letter-spacing:-3px;fill:#2e86c1;fill-opacity:1">Bi</text></g></svg>

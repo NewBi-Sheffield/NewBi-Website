@@ -1,19 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useAuth } from "@/lib/auth";
+import SuggestionModal from "@/components/SuggestionModal";
 
 type Props = {
   title: string;
   subtitle?: string;
   backHref?: string;
   backLabel?: string;
-  /** Show the "Join Us" button (homepage only) */
+  /** Show the suggestion button */
   showJoinUs?: boolean;
 };
 
 export default function PageHeader({ title, subtitle, backHref, backLabel, showJoinUs }: Props) {
   const { isLoggedIn, email, logout } = useAuth();
+  const [suggestionOpen, setSuggestionOpen] = useState(false);
 
   return (
     <header className="bg-[#0e1821] border-b border-white/10 px-4 py-8">
@@ -42,18 +45,17 @@ export default function PageHeader({ title, subtitle, backHref, backLabel, showJ
           {subtitle && <p className="text-white/75 text-sm mt-1">{subtitle}</p>}
         </div>
 
-        {/* Auth + optional Join Us */}
         <div className="flex items-center gap-2 shrink-0 mt-1">
           {showJoinUs && (
-            <Link
-              href="/contact"
+            <button
+              onClick={() => setSuggestionOpen(true)}
               className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white font-semibold px-4 py-2 rounded-xl text-sm hover:opacity-90 transition-opacity"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
-              Join Us
-            </Link>
+              Leave a suggestion
+            </button>
           )}
 
           {isLoggedIn ? (
@@ -82,6 +84,8 @@ export default function PageHeader({ title, subtitle, backHref, backLabel, showJ
           )}
         </div>
       </div>
+
+      <SuggestionModal open={suggestionOpen} onClose={() => setSuggestionOpen(false)} />
     </header>
   );
 }

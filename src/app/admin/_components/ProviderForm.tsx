@@ -21,13 +21,14 @@ type Props = {
   initialData?: Partial<ProviderFormData>;
   onSubmit: (data: ProviderFormData) => Promise<{ error: string | null }>;
   submitLabel: string;
+  uploadUrl?: string;
 };
 
 const inputClass =
   "w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent";
 const labelClass = "block text-xs font-semibold text-slate-300 mb-1";
 
-export default function ProviderForm({ initialData = {}, onSubmit, submitLabel }: Props) {
+export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, uploadUrl = "/api/admin/upload" }: Props) {
   const [form, setForm] = useState<ProviderFormData>({
     name: initialData.name ?? "",
     categories: initialData.categories ?? [],
@@ -107,7 +108,7 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel }
       const { data: { session } } = await supabase.auth.getSession();
       const fd = new FormData();
       fd.append("file", imageFile);
-      const res = await fetch("/api/admin/upload", {
+      const res = await fetch(uploadUrl, {
         method: "POST",
         headers: { Authorization: `Bearer ${session?.access_token}` },
         body: fd,

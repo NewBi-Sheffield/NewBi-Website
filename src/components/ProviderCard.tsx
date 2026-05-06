@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Provider, averageRating } from "@/lib/data";
+import { Provider} from "@/lib/data";
 
 function toTitleCase(s: string) {
   return s.replace(/\b\w/g, (c) => c.toUpperCase());
@@ -25,9 +25,6 @@ type Props = {
 };
 
 export default function ProviderCard({ provider }: Props) {
-  const avg = averageRating(provider.reviews);
-  const count = provider.reviews.length;
-
   return (
     <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-5 flex flex-col hover:border-[#45c97a]/30 transition-colors duration-200">
       {/* Profile picture */}
@@ -52,11 +49,6 @@ export default function ProviderCard({ provider }: Props) {
       {/* Name + rating row */}
       <div className="flex items-start justify-between gap-2 mb-2">
         <h2 className="text-base font-bold text-white leading-tight">{provider.name}</h2>
-        <div className="flex items-center gap-1 shrink-0">
-          <span className="text-yellow-400 text-base">★</span>
-          <span className="text-sm font-semibold text-white">{avg.toFixed(1)}</span>
-          <span className="text-xs text-slate-400">({count})</span>
-        </div>
       </div>
 
       {/* Category badges */}

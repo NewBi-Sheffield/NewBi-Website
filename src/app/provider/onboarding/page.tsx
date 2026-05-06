@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth";
-import PageHeader from "@/components/PageHeader";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
+import { supabase } from "@/lib/supabase";
 
-export default function SignupPage() {
-  const { signup } = useAuth();
+function OnboardingForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  const [providerName, setProviderName] = useState<string | null>(null);
+  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
+  const [tokenError, setTokenError] = useState<string | null>(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,74 +20,96 @@ export default function SignupPage() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!token) { setTokenError("No invite token found in this link."); return; }
+
+    fetch(`/api/provider/invite/${token}`)
+      .then((r) => r.json())
+      .then((body) => {
+        if (body.error) setTokenError(body.error);
+        else {
+          setProviderName(body.providerName);
+          setProfilePictureUrl(body.profilePictureUrl ?? null);
+        }
+      })
+      .catch(() => setTokenError("Failed to validate invite link."));
+  }, [token]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
-    if (password !== confirm) {
-      setError("Passwords do not match.");
-      return;
-    }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
-      return;
-    }
+    if (!name.trim()) { setError("Please enter your name."); return; }
+    if (password.length < 6) { setError("Password must be at least 6 characters."); return; }
+    if (password !== confirm) { setError("Passwords do not match."); return; }
 
     setLoading(true);
-    const { error } = await signup(email, password, name.trim());
-    setLoading(false);
 
-    if (error) {
-      setError(error);
+    const res = await fetch(`/api/provider/invite/${token}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name.trim(), email, password }),
+    });
+    const body = await res.json();
+
+    if (!res.ok) {
+      setError(body.error);
+      setLoading(false);
       return;
     }
 
-    setDone(true);
+    await supabase.auth.signInWithPassword({ email, password });
+    router.push(`/providers/${body.providerId}`);
   }
 
-  if (done) {
+  if (tokenError) {
     return (
-      <>
-        <PageHeader
-          title="Check your email"
-          subtitle="We sent you a confirmation link"
-          backHref="/login"
-          backLabel="Back to log in"
-        />
-        <main className="max-w-md mx-auto px-4 py-8">
-          <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-6 text-center">
-            <p className="text-sm text-slate-300 mb-4">
-              A confirmation link has been sent to <span className="font-semibold text-white">{email}</span>.
-              Click the link in the email to activate your account, then log in.
-            </p>
-            <button
-              onClick={() => router.push("/login")}
-              className="w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
-            >
-              Go to log in
-            </button>
-          </div>
-        </main>
-      </>
+      <main className="min-h-screen bg-[#080f18] flex items-center justify-center px-4">
+        <div className="text-center">
+          <p className="text-red-400 text-sm">{tokenError}</p>
+          <p className="text-slate-500 text-xs mt-2">Ask your Newbi contact for a new link.</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (!providerName) {
+    return (
+      <main className="min-h-screen bg-[#080f18] flex items-center justify-center">
+        <p className="text-slate-400 text-sm">Validating invite…</p>
+      </main>
     );
   }
 
   return (
-    <>
-      <PageHeader
-        title="Create an account"
-        subtitle="Sign up to leave reviews and more"
-        backHref="/"
-        backLabel="Back to all businesses"
-      />
-      <main className="max-w-md mx-auto px-4 py-8">
-        <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-6">
+    <main className="min-h-screen bg-[#080f18] flex flex-col items-center justify-center px-4 py-12">
+      <div className="w-full max-w-sm">
+        {/* Provider identity */}
+        <div className="flex flex-col items-center mb-8">
+          {profilePictureUrl ? (
+            <Image
+              src={profilePictureUrl}
+              alt={providerName}
+              width={80}
+              height={80}
+              className="rounded-full object-cover ring-2 ring-white/10 mb-4"
+            />
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-[#1a3550] flex items-center justify-center ring-2 ring-white/10 mb-4">
+              <span className="text-2xl font-bold text-slate-400">{providerName.charAt(0).toUpperCase()}</span>
+            </div>
+          )}
+          <h1 className="text-xl font-bold text-white text-center">{providerName}</h1>
+          <p className="text-sm text-slate-400 mt-1">Set up your Newbi account</p>
+        </div>
+
+        {/* Form */}
+        <div className="bg-[#0a1929] rounded-2xl border border-white/8 p-6">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1" htmlFor="name">
-                Full name
+                Your name
               </label>
               <input
                 id="name"
@@ -91,7 +117,6 @@ export default function SignupPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
                 className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
               />
             </div>
@@ -111,7 +136,7 @@ export default function SignupPage() {
             </div>
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1" htmlFor="password">
-                Password
+                Choose a password
               </label>
               <input
                 id="password"
@@ -146,17 +171,23 @@ export default function SignupPage() {
               disabled={loading}
               className="w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {loading ? "Creating account…" : "Create account"}
+              {loading ? "Setting up…" : "Complete setup"}
             </button>
-            <p className="text-center text-sm text-slate-400">
-              Already have an account?{" "}
-              <Link href="/login" className="text-[#45c97a] font-semibold hover:underline">
-                Log in
-              </Link>
-            </p>
           </form>
         </div>
+      </div>
+    </main>
+  );
+}
+
+export default function ProviderOnboardingPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-[#080f18] flex items-center justify-center">
+        <p className="text-slate-400 text-sm">Loading…</p>
       </main>
-    </>
+    }>
+      <OnboardingForm />
+    </Suspense>
   );
 }

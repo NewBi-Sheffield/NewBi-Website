@@ -16,10 +16,13 @@
     "@tiptap/pm": "^3.22.0",
     "@tiptap/react": "^3.22.0",
     "@tiptap/starter-kit": "^3.22.0",
+    "lightningcss": "^1.32.0",
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.30",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "resend": "^6.12.2",
+    "supabase": "^2.98.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

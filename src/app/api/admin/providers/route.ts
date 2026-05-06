@@ -1,16 +1,31 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { getAdminUser } from "@/app/api/admin/_auth";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const anonSupabase = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-const adminSupabase = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+const adminSupabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
-async function getAdminUser(req: NextRequest) {
-  const token = req.headers.get("authorization")?.replace("Bearer ", "");
-  if (!token) return null;
-  const { data: { user } } = await anonSupabase.auth.getUser(token);
-  if (!user?.user_metadata?.is_admin) return null;
-  return user;
+export async function GET(req: NextRequest) {
+  const user = await getAdminUser(req);
+  if (!user) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  const { data, error } = await adminSupabase
+    .from("providers")
+    .select("*, reviews(*)")
+    .order("name");
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  const providers = (data ?? []).map((p) => ({
+    ...p,
+    categories: p.categories ?? [],
+    reviews: p.reviews ?? [],
+    status: p.status ?? "approved",
+  }));
+
+  return NextResponse.json(providers);
 }
 
 export async function POST(req: NextRequest) {
@@ -24,7 +39,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { data, error } = await adminSupabase
-    .from("providers")
+    .from("provider_profiles")
     .insert({
       name,
       categories,
