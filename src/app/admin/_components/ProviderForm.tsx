@@ -24,6 +24,33 @@ type Props = {
   uploadUrl?: string;
 };
 
+function cropToSquareDataUrl(file: File): Promise<string> {
+  return new Promise((resolve) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = document.createElement("img");
+    img.onload = () => {
+      const size = Math.min(img.width, img.height);
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, size, size);
+      URL.revokeObjectURL(objectUrl);
+      resolve(canvas.toDataURL("image/jpeg", 0.9));
+    };
+    img.src = objectUrl;
+  });
+}
+
+function dataUrlToBlob(dataUrl: string): Blob {
+  const [header, data] = dataUrl.split(",");
+  const mime = header.match(/:(.*?);/)?.[1] ?? "image/jpeg";
+  const bytes = atob(data);
+  const arr = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+
 const inputClass =
   "w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent";
 const labelClass = "block text-xs font-semibold text-slate-300 mb-1";
@@ -42,7 +69,7 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, 
   });
 
   const [catInput, setCatInput] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(initialData.profile_picture_url ?? null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -72,15 +99,16 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, 
     }
   }
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    const dataUrl = await cropToSquareDataUrl(file);
+    setImageDataUrl(dataUrl);
+    setImagePreview(dataUrl);
   }
 
   function handleRemoveImage() {
-    setImageFile(null);
+    setImageDataUrl(null);
     setImagePreview(null);
     set("profile_picture_url", null);
     if (fileRef.current) fileRef.current.value = "";
@@ -104,10 +132,10 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, 
     setLoading(true);
     let profile_picture_url = form.profile_picture_url;
 
-    if (imageFile) {
+    if (imageDataUrl) {
       const { data: { session } } = await supabase.auth.getSession();
       const fd = new FormData();
-      fd.append("file", imageFile);
+      fd.append("file", dataUrlToBlob(imageDataUrl), "photo.jpg");
       const res = await fetch(uploadUrl, {
         method: "POST",
         headers: { Authorization: `Bearer ${session?.access_token}` },
