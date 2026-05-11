@@ -235,7 +235,6 @@ function BusinessStep({
   const [categories, setCategories] = useState<string[]>([]);
   const [catInput, setCatInput] = useState("");
   const [description, setDescription] = useState("");
-  const [businessEmail, setBusinessEmail] = useState(account.email);
   const [phone, setPhone] = useState("");
   const [instagram, setInstagram] = useState("");
   const [website, setWebsite] = useState("");
@@ -300,7 +299,7 @@ function BusinessStep({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         accountName: account.name,
-        email: businessEmail.trim() || account.email,
+        email: account.email,
         password: account.password,
         profilePictureBase64,
         profilePictureMime,
@@ -319,7 +318,7 @@ function BusinessStep({
 
     if (!res.ok) { setError(friendlyApiError(body.error ?? "")); return; }
 
-    onSuccess(businessEmail.trim() || account.email);
+    onSuccess(account.email);
   }
 
   return (
@@ -416,15 +415,9 @@ function BusinessStep({
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className={labelClass}>Phone</label>
-              <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+44 7700 000000" className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}>Business email</label>
-              <input type="email" value={businessEmail} onChange={(e) => setBusinessEmail(e.target.value)} placeholder="hello@example.com" className={inputClass} />
-            </div>
+          <div>
+            <label className={labelClass}>Phone</label>
+            <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+44 7700 000000" className={inputClass} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

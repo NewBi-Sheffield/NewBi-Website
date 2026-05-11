@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       instagram: instagram?.trim() || null,
       website: website?.trim() || null,
       user_id: userId,
-      status: "pending",
+      status: "unconfirmed",
       profile_picture_url: profilePictureUrl,
     })
     .select("id")
