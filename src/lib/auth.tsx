@@ -57,6 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false);
         return;
       }
+      setLoading(true);
       fetchAdmin(u.id).finally(() => setLoading(false));
     });
 
