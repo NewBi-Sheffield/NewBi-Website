@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Provider} from "@/lib/data";
+import { Provider } from "@/lib/db";
 
 function toTitleCase(s: string) {
   return s.replace(/\b\w/g, (c) => c.toUpperCase());
