@@ -36,7 +36,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   if (insertError || !invite) return NextResponse.json({ error: "Failed to create invite" }, { status: 500 });
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? req.nextUrl.origin;
   const link = `${siteUrl}/provider/onboarding?token=${invite.token}`;
 
   return NextResponse.json({ link, providerName: provider.name });
