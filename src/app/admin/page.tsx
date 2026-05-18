@@ -130,7 +130,7 @@ function ApplicationsScreen({ providers, loading }: { providers: Provider[]; loa
         />
       </div>
       <div className="flex items-center justify-between">
-        <p className="text-xs text-[#9E7580]">Self-signed providers awaiting approval — click to review</p>
+        <p className="text-xs text-[#9E7580]">Self-signed providers awaiting approval - click to review</p>
         <span className="text-xs text-[#B09098] bg-[#2D1A1F]/5 px-2 py-0.5 rounded-full">{loading ? "…" : filtered.length}</span>
       </div>
       {loading && <p className="text-xs text-[#B09098]">Loading…</p>}
@@ -205,7 +205,7 @@ function ProvidersScreen({
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="text-sm font-semibold text-[#2D1A1F]">Pending invites</h2>
-            <p className="text-xs text-[#9E7580] mt-0.5">Admin-created listings without an account — click to manage</p>
+            <p className="text-xs text-[#9E7580] mt-0.5">Admin-created listings without an account - click to manage</p>
           </div>
           <span className="text-xs text-[#B09098] bg-[#2D1A1F]/5 px-2 py-0.5 rounded-full">{loading ? "…" : unlinked.length}</span>
         </div>
@@ -271,7 +271,7 @@ function ProvidersScreen({
           <div className="flex items-center justify-between mb-3">
             <div>
               <h2 className="text-sm font-semibold text-[#2D1A1F]">Unlisted</h2>
-              <p className="text-xs text-[#9E7580] mt-0.5">Hidden from the site — edit to relist or delete</p>
+              <p className="text-xs text-[#9E7580] mt-0.5">Hidden from the site - edit to relist or delete</p>
             </div>
             <span className="text-xs text-[#B09098] bg-[#2D1A1F]/5 px-2 py-0.5 rounded-full">{unlisted.length}</span>
           </div>

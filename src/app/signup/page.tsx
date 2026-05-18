@@ -121,7 +121,7 @@ function AccountStep({
         </div>
         <h1 className="text-xl font-bold text-[#2D1A1F]">Create your account</h1>
         {isProvider && (
-          <p className="text-[#9E7580] text-sm mt-1">Step 1 of 2 — you&apos;ll add your business details next</p>
+          <p className="text-[#9E7580] text-sm mt-1">Step 1 of 2 - you&apos;ll add your business details next</p>
         )}
       </div>
 
@@ -214,7 +214,7 @@ function friendlyApiError(raw: string): string {
     return "That email address doesn't look right. Please double-check it.";
   }
   if (lower.includes("password")) {
-    return "Your password is too short — it needs to be at least 6 characters.";
+    return "Your password is too short - it needs to be at least 6 characters.";
   }
   if (lower.includes("required fields") || lower.includes("missing")) {
     return "Some required fields are missing. Please fill in everything marked with *.";
@@ -330,7 +330,7 @@ function BusinessStep({
           </svg>
         </div>
         <h1 className="text-xl font-bold text-[#2D1A1F]">Your business details</h1>
-        <p className="text-[#9E7580] text-sm mt-1">Step 2 of 2 — this is what appears on your public listing</p>
+        <p className="text-[#9E7580] text-sm mt-1">Step 2 of 2 - this is what appears on your public listing</p>
       </div>
 
       <div className="bg-[#FFF5F0] border border-[#2D1A1F]/8 rounded-2xl p-6">
@@ -363,7 +363,7 @@ function BusinessStep({
             </button>
             <div>
               <p className="text-sm font-semibold text-[#2D1A1F]">{profileDataUrl ? "Photo added" : "Add a business photo"}</p>
-              <p className="text-xs text-[#B09098] mt-0.5">{profileDataUrl ? "Click the photo to change it." : "Optional — shown on your public listing."}</p>
+              <p className="text-xs text-[#B09098] mt-0.5">{profileDataUrl ? "Click the photo to change it." : "Optional - shown on your public listing."}</p>
               <button type="button" onClick={() => fileRef.current?.click()} className="mt-1.5 text-xs text-[#C4909A] hover:underline">
                 {profileDataUrl ? "Change photo" : "Upload photo"}
               </button>
@@ -397,7 +397,7 @@ function BusinessStep({
                 onChange={(e) => setCatInput(e.target.value)}
                 onKeyDown={handleCatKeyDown}
                 onBlur={() => { if (catInput.trim()) { addCategory(catInput); setCatInput(""); } }}
-                placeholder={categories.length === 0 ? "e.g. Hair, Nails — press Enter to add…" : "Add another…"}
+                placeholder={categories.length === 0 ? "e.g. Hair, Nails - press Enter to add…" : "Add another…"}
                 className="flex-1 min-w-[120px] bg-transparent text-[#2D1A1F] placeholder-[#B09098] outline-none text-sm py-0.5"
               />
             </div>
@@ -548,7 +548,7 @@ export default function SignupPage() {
       return null;
     }
 
-    // Provider — move to business step
+    // Provider - move to business step
     setStep("business");
     return null;
   }

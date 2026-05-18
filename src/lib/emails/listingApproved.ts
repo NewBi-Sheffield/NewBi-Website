@@ -30,7 +30,7 @@ export function listingApprovedHtml({
           <td style="padding:32px;">
             <p style="margin:0 0 8px;font-size:20px;font-weight:700;color:#2D1A1F;">You're live on NewBi!</p>
             <p style="margin:0 0 24px;font-size:14px;color:#9E7580;line-height:1.6;">
-              Hi ${name}, great news — <strong style="color:#2D1A1F;">${businessName}</strong> has been approved and your listing is now live on NewBi. Customers can find and book you right now.
+              Hi ${name}, great news - <strong style="color:#2D1A1F;">${businessName}</strong> has been approved and your listing is now live on NewBi. Customers can find and book you right now.
             </p>
             <a href="${listingUrl}"
                style="display:inline-block;background:#C4909A;color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 24px;border-radius:10px;">

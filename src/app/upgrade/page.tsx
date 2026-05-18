@@ -152,7 +152,7 @@ function BusinessForm({
           </svg>
         </div>
         <h1 className="text-xl font-bold text-[#2D1A1F]">List your business</h1>
-        <p className="text-[#9E7580] text-sm mt-1">Tell us about your business — this is what appears on your public listing</p>
+        <p className="text-[#9E7580] text-sm mt-1">Tell us about your business - this is what appears on your public listing</p>
       </div>
 
       <div className="bg-[#FFF5F0] border border-[#2D1A1F]/8 rounded-2xl p-6">
@@ -185,7 +185,7 @@ function BusinessForm({
             </button>
             <div>
               <p className="text-sm font-semibold text-[#2D1A1F]">{profileDataUrl ? "Photo added" : "Add a business photo"}</p>
-              <p className="text-xs text-[#B09098] mt-0.5">{profileDataUrl ? "Click the photo to change it." : "Optional — shown on your public listing."}</p>
+              <p className="text-xs text-[#B09098] mt-0.5">{profileDataUrl ? "Click the photo to change it." : "Optional - shown on your public listing."}</p>
               <button type="button" onClick={() => fileRef.current?.click()} className="mt-1.5 text-xs text-[#C4909A] hover:underline">
                 {profileDataUrl ? "Change photo" : "Upload photo"}
               </button>
@@ -219,7 +219,7 @@ function BusinessForm({
                 onChange={(e) => setCatInput(e.target.value)}
                 onKeyDown={handleCatKeyDown}
                 onBlur={() => { if (catInput.trim()) { addCategory(catInput); setCatInput(""); } }}
-                placeholder={categories.length === 0 ? "e.g. Hair, Nails — press Enter to add…" : "Add another…"}
+                placeholder={categories.length === 0 ? "e.g. Hair, Nails - press Enter to add…" : "Add another…"}
                 className="flex-1 min-w-[120px] bg-transparent text-[#2D1A1F] placeholder-[#B09098] outline-none text-sm py-0.5"
               />
             </div>

@@ -71,7 +71,7 @@ export default function SuggestionModal({ open, onClose }: Props) {
         <div className="flex items-start justify-between mb-5">
           <div>
             <h2 className="text-base font-bold text-[#2D1A1F]">Leave a suggestion</h2>
-            <p className="text-xs text-[#9E7580] mt-0.5">We read every message — your feedback shapes the site.</p>
+            <p className="text-xs text-[#9E7580] mt-0.5">We read every message - your feedback shapes the site.</p>
           </div>
           <button
             onClick={onClose}

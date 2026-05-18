@@ -4,21 +4,21 @@ import { AuthProvider } from "@/lib/auth";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
-  title: "NewBi — Find Local Service Providers in Sheffield",
+  title: "NewBi - Find Local Service Providers in Sheffield",
   description: "Search and review local service providers in Sheffield. Hairdressers, nail techs, physiotherapists, and more.",
   icons: {
     icon: "/Logo%20full.png",
     apple: "/Logo%20full.png",
   },
   openGraph: {
-    title: "NewBi — Find Local Service Providers in Sheffield",
+    title: "NewBi - Find Local Service Providers in Sheffield",
     description: "Search and review local service providers in Sheffield. Hairdressers, nail techs, physiotherapists, and more.",
     images: [{ url: "/Logo%20full.png" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "NewBi — Find Local Service Providers in Sheffield",
+    title: "NewBi - Find Local Service Providers in Sheffield",
     description: "Search and review local service providers in Sheffield. Hairdressers, nail techs, physiotherapists, and more.",
     images: ["/Logo%20full.png"],
   },
