@@ -35,13 +35,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Your password needs to be at least 6 characters." }, { status: 400 });
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? req.nextUrl.origin;
+
   const { data: linkData, error: linkError } = await adminSupabase.auth.admin.generateLink({
     type: "signup",
     email: email.trim(),
     password,
     options: {
       data: { full_name: accountName.trim() },
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/account`,
+      redirectTo: `${siteUrl}/account`,
     },
   });
 
