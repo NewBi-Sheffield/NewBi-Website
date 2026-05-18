@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? req.nextUrl.origin;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://newbi.co.uk";
 
   const { data: linkData, error: linkError } = await adminSupabase.auth.admin.generateLink({
     type: "signup",
