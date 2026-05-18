@@ -71,12 +71,12 @@ export async function POST(req: NextRequest) {
 
   const { data: profile } = await adminSupabase
     .from("profiles")
-    .select("display_name")
+    .select("name")
     .eq("id", user.id)
     .single();
 
   sendApplicationReceived({
-    name: profile?.display_name ?? name.trim(),
+    name: profile?.name ?? name.trim(),
     email: finalEmail,
     businessName: name.trim(),
   }).catch(console.error);

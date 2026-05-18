@@ -70,22 +70,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signup(email: string, password: string, name: string): Promise<{ error: string | null }> {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin}/auth/callback`,
-        data: { full_name: name },
-      },
+    const res = await fetch("/api/student/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, name }),
     });
-    return { error: error?.message ?? null };
+    if (res.ok) return { error: null };
+    const body = await res.json().catch(() => ({}));
+    return { error: body.error ?? "We couldn't create your account. Please try again." };
   }
 
   async function updateName(name: string): Promise<{ error: string | null }> {
     const { error } = await supabase.auth.updateUser({ data: { full_name: name } });
     if (error) return { error: error.message };
     if (user) {
-      await supabase.from("profiles").update({ name }).eq("user_id", user.id);
+      await supabase.from("profiles").update({ name }).eq("id", user.id);
     }
     return { error: null };
   }

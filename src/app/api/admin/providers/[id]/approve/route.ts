@@ -34,12 +34,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   // Fetch the owner's display name from profiles
   const { data: profile } = await adminSupabase
     .from("profiles")
-    .select("display_name")
+    .select("name")
     .eq("id", provider.user_id)
     .single();
 
   sendListingApproved({
-    name: profile?.display_name ?? provider.name,
+    name: profile?.name ?? provider.name,
     email: provider.email,
     businessName: provider.name,
     listingUrl: `${SITE_URL}/providers/${id}`,
