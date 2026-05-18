@@ -48,10 +48,10 @@ export default function ResetPasswordPage() {
         backLabel="Back to log in"
       />
       <main className="max-w-md mx-auto px-4 py-8">
-        <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#FFF5F0] rounded-2xl border border-[#2D1A1F]/10 p-6">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1" htmlFor="password">
+              <label className="block text-xs font-semibold text-[#6B4550] mb-1" htmlFor="password">
                 New password
               </label>
               <input
@@ -61,12 +61,12 @@ export default function ResetPasswordPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
+                className="w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent"
               />
-              <p className="text-xs text-slate-500 mt-1.5">At least 6 characters.</p>
+              <p className="text-xs text-[#B09098] mt-1.5">At least 6 characters.</p>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1" htmlFor="confirm">
+              <label className="block text-xs font-semibold text-[#6B4550] mb-1" htmlFor="confirm">
                 Confirm new password
               </label>
               <input
@@ -76,16 +76,16 @@ export default function ResetPasswordPage() {
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 placeholder="••••••••"
-                className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
+                className="w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent"
               />
             </div>
             {error && (
-              <p className="text-xs text-red-400 bg-red-900/20 px-3 py-2 rounded-lg">{error}</p>
+              <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
             )}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full bg-[#C4909A] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#A87580] active:scale-95 transition-all mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? "Saving…" : "Set new password"}
             </button>

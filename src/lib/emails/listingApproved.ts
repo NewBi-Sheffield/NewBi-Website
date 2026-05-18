@@ -13,42 +13,42 @@ export function listingApprovedHtml({
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /></head>
-<body style="margin:0;padding:0;background:#080f18;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#080f18;padding:40px 16px;">
+<body style="margin:0;padding:0;background:#F5E8EA;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5E8EA;padding:40px 16px;">
     <tr><td align="center">
-      <table width="100%" style="max-width:520px;background:#0a1929;border-radius:16px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;">
+      <table width="100%" style="max-width:520px;background:#FFFAF8;border-radius:16px;border:1px solid rgba(44,26,31,0.10);overflow:hidden;">
 
         <!-- Header -->
         <tr>
-          <td style="padding:32px 32px 24px;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <img src="${SITE_URL}/logo-Transparent.png" alt="Newbi" height="28" style="display:block;" />
+          <td style="padding:32px 32px 24px;border-bottom:1px solid rgba(44,26,31,0.08);">
+            <img src="${SITE_URL}/Logo.png" alt="Newbi" height="32" style="display:block;" />
           </td>
         </tr>
 
         <!-- Body -->
         <tr>
           <td style="padding:32px;">
-            <p style="margin:0 0 8px;font-size:20px;font-weight:700;color:#ffffff;">You're live on Newbi!</p>
-            <p style="margin:0 0 24px;font-size:14px;color:#94a3b8;line-height:1.6;">
-              Hi ${name}, great news — <strong style="color:#e2e8f0;">${businessName}</strong> has been approved and your listing is now live on Newbi. Customers can find and book you right now.
+            <p style="margin:0 0 8px;font-size:20px;font-weight:700;color:#2D1A1F;">You're live on Newbi!</p>
+            <p style="margin:0 0 24px;font-size:14px;color:#9E7580;line-height:1.6;">
+              Hi ${name}, great news — <strong style="color:#2D1A1F;">${businessName}</strong> has been approved and your listing is now live on Newbi. Customers can find and book you right now.
             </p>
             <a href="${listingUrl}"
-               style="display:inline-block;background:linear-gradient(to right,#45c97a,#3d88c4);color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 24px;border-radius:10px;">
+               style="display:inline-block;background:#C4909A;color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 24px;border-radius:10px;">
               View your listing
             </a>
-            <p style="margin:24px 0 0;font-size:13px;color:#64748b;line-height:1.6;">
+            <p style="margin:24px 0 0;font-size:13px;color:#B09098;line-height:1.6;">
               You can update your details and manage your listing at any time from your
-              <a href="${SITE_URL}/account" style="color:#45c97a;text-decoration:none;">account page</a>.
+              <a href="${SITE_URL}/account" style="color:#C4909A;text-decoration:none;">account page</a>.
             </p>
           </td>
         </tr>
 
         <!-- Footer -->
         <tr>
-          <td style="padding:20px 32px;border-top:1px solid rgba(255,255,255,0.06);">
-            <p style="margin:0;font-size:12px;color:#475569;">
+          <td style="padding:20px 32px;border-top:1px solid rgba(44,26,31,0.08);">
+            <p style="margin:0;font-size:12px;color:#B09098;">
               You're receiving this because your business is listed on
-              <a href="${SITE_URL}" style="color:#45c97a;text-decoration:none;">Newbi</a>.
+              <a href="${SITE_URL}" style="color:#C4909A;text-decoration:none;">Newbi</a>.
             </p>
           </td>
         </tr>

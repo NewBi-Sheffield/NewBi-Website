@@ -1,22 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0e1821;
-  --foreground: #e8f2f9;
-  --brand-green: #45c97a;
-  --brand-blue: #3d88c4;
+  --background: #FAF0E6;
+  --foreground: #2D1A1F;
+  --brand-rose: #C4909A;
+  --brand-rose-deep: #A87580;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: Calibri, 'Gill Sans', 'Gill Sans MT', sans-serif;
+  --font-faunces: 'Faunces', Georgia, serif;
   --font-mono: var(--font-geist-mono);
 }
 
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: Calibri, 'Gill Sans', 'Gill Sans MT', sans-serif;
+  }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Calibri, 'Gill Sans', 'Gill Sans MT', sans-serif;
+  h1, h2 {
+    font-family: 'Faunces', Georgia, serif;
+  }
 }

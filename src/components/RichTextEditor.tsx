@@ -46,7 +46,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
     editorProps: {
       attributes: {
         class:
-          "min-h-[140px] px-3 py-2.5 text-sm text-slate-300 outline-none [&_p]:my-0.5 [&_a]:text-[#45c97a] [&_a]:underline",
+          "min-h-[140px] px-3 py-2.5 text-sm text-[#6B4550] outline-none [&_p]:my-0.5 [&_a]:text-[#C4909A] [&_a]:underline",
       },
     },
   });
@@ -90,13 +90,13 @@ export default function RichTextEditor({ value, onChange }: Props) {
   const toolbarBtn = (active: boolean): string =>
     `px-2.5 py-1 rounded text-xs font-semibold transition-colors ${
       active
-        ? "bg-[#45c97a]/20 text-[#45c97a]"
-        : "text-slate-400 hover:text-white hover:bg-white/10"
+        ? "bg-[#C4909A]/20 text-[#C4909A]"
+        : "text-[#9E7580] hover:text-[#2D1A1F] hover:bg-[#2D1A1F]/10"
     }`;
 
   return (
-    <div className="border border-white/10 rounded-xl overflow-hidden bg-[#091624] focus-within:ring-2 focus-within:ring-[#45c97a]/40">
-      <div className="flex items-center gap-0.5 px-2 py-1.5 border-b border-white/10">
+    <div className="border border-[#2D1A1F]/10 rounded-xl overflow-hidden bg-[#FAF0E6] focus-within:ring-2 focus-within:ring-[#C4909A]/40">
+      <div className="flex items-center gap-0.5 px-2 py-1.5 border-b border-[#2D1A1F]/10">
         <button
           type="button"
           onMouseDown={(e) => {
@@ -119,7 +119,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
           <em>I</em>
         </button>
 
-        <div className="w-px h-3.5 bg-white/10 mx-1" />
+        <div className="w-px h-3.5 bg-[#2D1A1F]/10 mx-1" />
 
         <button
           type="button"
@@ -139,7 +139,7 @@ export default function RichTextEditor({ value, onChange }: Props) {
               e.preventDefault();
               editor.chain().focus().unsetLink().run();
             }}
-            className="px-2.5 py-1 rounded text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-white/10 transition-colors"
+            className="px-2.5 py-1 rounded text-xs font-semibold text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors"
           >
             Unlink
           </button>

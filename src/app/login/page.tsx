@@ -34,12 +34,12 @@ function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       {resetSuccess && (
-        <p className="text-xs text-green-400 bg-green-900/20 px-3 py-2 rounded-lg">
+        <p className="text-xs text-[#A87580] bg-[#C4909A]/10 px-3 py-2 rounded-lg">
           Password updated successfully. Log in with your new password.
         </p>
       )}
       <div>
-        <label className="block text-xs font-semibold text-slate-300 mb-1" htmlFor="email">
+        <label className="block text-xs font-semibold text-[#6B4550] mb-1" htmlFor="email">
           Email address
         </label>
         <input
@@ -49,11 +49,11 @@ function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
-          className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
+          className="w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent"
         />
       </div>
       <div>
-        <label className="block text-xs font-semibold text-slate-300 mb-1" htmlFor="password">
+        <label className="block text-xs font-semibold text-[#6B4550] mb-1" htmlFor="password">
           Password
         </label>
         <input
@@ -63,26 +63,26 @@ function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
-          className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
+          className="w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent"
         />
-        <p className="text-xs text-slate-500 mt-1.5">
+        <p className="text-xs text-[#B09098] mt-1.5">
           Forgot your password?{" "}
-          <Link href="/forgot-password" className="text-[#45c97a] hover:underline">Reset it</Link>
+          <Link href="/forgot-password" className="text-[#C4909A] hover:underline">Reset it</Link>
         </p>
       </div>
       {error && (
-        <p className="text-xs text-red-400 bg-red-900/20 px-3 py-2 rounded-lg">{error}</p>
+        <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
       )}
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full bg-[#C4909A] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#A87580] active:scale-95 transition-all mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {loading ? "Logging in…" : "Log in"}
       </button>
-      <p className="text-center text-sm text-slate-400">
+      <p className="text-center text-sm text-[#9E7580]">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="text-[#45c97a] font-semibold hover:underline">
+        <Link href="/signup" className="text-[#C4909A] font-semibold hover:underline">
           Sign up
         </Link>
       </p>
@@ -100,7 +100,7 @@ export default function LoginPage() {
         backLabel="Back to all businesses"
       />
       <main className="max-w-md mx-auto px-4 py-8">
-        <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#FFF5F0] rounded-2xl border border-[#2D1A1F]/10 p-6">
           <Suspense>
             <LoginForm />
           </Suspense>

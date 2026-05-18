@@ -15,9 +15,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Faunces:ital,opsz,wght@0,6..72,100..900;1,6..72,100..900&display=swap" rel="stylesheet" />
+      </head>
       <body className="antialiased min-h-screen">
-        <AuthProvider>{children}</AuthProvider>
-        <Analytics />
+        <div
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundImage: "url('/beauty-bg.svg')",
+            backgroundRepeat: "repeat",
+            backgroundSize: "500px 800px",
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        />
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <AuthProvider>{children}</AuthProvider>
+          <Analytics />
+        </div>
       </body>
     </html>
   );
