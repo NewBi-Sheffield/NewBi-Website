@@ -329,7 +329,7 @@ export default function AccountPage() {
       <aside className="w-56 shrink-0 border-r border-[#2D1A1F]/8 flex flex-col">
         <div className="px-5 py-6 border-b border-[#2D1A1F]/8">
           <Link href="/">
-            <img src="/logo-Transparent.png" alt="Newbi" className="h-7" />
+            <img src="/logo-Transparent.png" alt="NewBi" className="h-7" />
           </Link>
           <p className="text-xs text-[#B09098] mt-1">{email}</p>
         </div>

@@ -37,8 +37,8 @@ function ChooseStep({ onChoose }: { onChoose: (t: SignupType) => void }) {
   return (
     <div className="w-full max-w-lg mx-auto">
       <div className="mb-10 text-center">
-        <h1 className="text-2xl font-bold text-[#2D1A1F]">Join Newbi</h1>
-        <p className="text-[#9E7580] text-sm mt-2">How are you planning to use Newbi?</p>
+        <h1 className="text-2xl font-bold text-[#2D1A1F]">Join NewBi</h1>
+        <p className="text-[#9E7580] text-sm mt-2">How are you planning to use NewBi?</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
