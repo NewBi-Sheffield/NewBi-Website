@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 const inputClass =
-  "w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent";
-const labelClass = "block text-xs font-semibold text-slate-300 mb-1";
+  "w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent";
+const labelClass = "block text-xs font-semibold text-[#6B4550] mb-1";
 
 function cropToSquareDataUrl(file: File): Promise<{ dataUrl: string; mime: string }> {
   return new Promise((resolve) => {
@@ -146,16 +146,16 @@ function BusinessForm({
   return (
     <div className="w-full max-w-xl mx-auto">
       <div className="mb-8 text-center">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#45c97a]/20 to-[#3d88c4]/20 border border-[#45c97a]/30 flex items-center justify-center mx-auto mb-4">
-          <svg className="w-5 h-5 text-[#45c97a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-12 h-12 rounded-full bg-[#C4909A]/15 border border-[#C4909A]/25 flex items-center justify-center mx-auto mb-4">
+          <svg className="w-5 h-5 text-[#C4909A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
         </div>
-        <h1 className="text-xl font-bold text-white">List your business</h1>
-        <p className="text-slate-400 text-sm mt-1">Tell us about your business — this is what appears on your public listing</p>
+        <h1 className="text-xl font-bold text-[#2D1A1F]">List your business</h1>
+        <p className="text-[#9E7580] text-sm mt-1">Tell us about your business — this is what appears on your public listing</p>
       </div>
 
-      <div className="bg-[#0a1929] border border-white/8 rounded-2xl p-6">
+      <div className="bg-[#FFF5F0] border border-[#2D1A1F]/8 rounded-2xl p-6">
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
           {/* Business photo */}
@@ -163,20 +163,20 @@ function BusinessForm({
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
-              className="relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 border-dashed border-white/20 hover:border-[#45c97a]/60 transition-colors group focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40"
+              className="relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 border-dashed border-[#2D1A1F]/20 hover:border-[#C4909A]/60 transition-colors group focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40"
             >
               {profileDataUrl ? (
                 <img src={profileDataUrl} alt="Business photo preview" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-[#091624] flex items-center justify-center">
-                  <svg className="w-6 h-6 text-slate-500 group-hover:text-[#45c97a] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-full h-full bg-[#FAF0E6] flex items-center justify-center">
+                  <svg className="w-6 h-6 text-[#B09098] group-hover:text-[#C4909A] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
               )}
               {profileDataUrl && (
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="absolute inset-0 bg-[#2D1A1F]/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                   </svg>
@@ -184,9 +184,9 @@ function BusinessForm({
               )}
             </button>
             <div>
-              <p className="text-sm font-semibold text-white">{profileDataUrl ? "Photo added" : "Add a business photo"}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{profileDataUrl ? "Click the photo to change it." : "Optional — shown on your public listing."}</p>
-              <button type="button" onClick={() => fileRef.current?.click()} className="mt-1.5 text-xs text-[#45c97a] hover:underline">
+              <p className="text-sm font-semibold text-[#2D1A1F]">{profileDataUrl ? "Photo added" : "Add a business photo"}</p>
+              <p className="text-xs text-[#B09098] mt-0.5">{profileDataUrl ? "Click the photo to change it." : "Optional — shown on your public listing."}</p>
+              <button type="button" onClick={() => fileRef.current?.click()} className="mt-1.5 text-xs text-[#C4909A] hover:underline">
                 {profileDataUrl ? "Change photo" : "Upload photo"}
               </button>
             </div>
@@ -207,11 +207,11 @@ function BusinessForm({
 
           <div>
             <label className={labelClass}>Service categories *</label>
-            <div className="flex flex-wrap gap-1.5 w-full text-sm bg-[#091624] border border-white/10 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-[#45c97a]/40 min-h-[44px] items-center">
+            <div className="flex flex-wrap gap-1.5 w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-[#C4909A]/40 min-h-[44px] items-center">
               {categories.map((cat) => (
-                <span key={cat} className="flex items-center gap-1 bg-[#45c97a]/15 text-[#45c97a] text-xs font-medium px-2 py-0.5 rounded-full">
+                <span key={cat} className="flex items-center gap-1 bg-[#C4909A]/15 text-[#A87580] text-xs font-medium px-2 py-0.5 rounded-full">
                   {cat}
-                  <button type="button" onClick={() => removeCategory(cat)} className="hover:text-white leading-none">×</button>
+                  <button type="button" onClick={() => removeCategory(cat)} className="hover:text-[#2D1A1F] leading-none">×</button>
                 </span>
               ))}
               <input
@@ -220,10 +220,10 @@ function BusinessForm({
                 onKeyDown={handleCatKeyDown}
                 onBlur={() => { if (catInput.trim()) { addCategory(catInput); setCatInput(""); } }}
                 placeholder={categories.length === 0 ? "e.g. Hair, Nails — press Enter to add…" : "Add another…"}
-                className="flex-1 min-w-[120px] bg-transparent text-white placeholder-slate-500 outline-none text-sm py-0.5"
+                className="flex-1 min-w-[120px] bg-transparent text-[#2D1A1F] placeholder-[#B09098] outline-none text-sm py-0.5"
               />
             </div>
-            <p className="text-xs text-slate-500 mt-1">Press Enter or comma to add. Backspace to remove the last one.</p>
+            <p className="text-xs text-[#B09098] mt-1">Press Enter or comma to add. Backspace to remove the last one.</p>
           </div>
 
           <div>
@@ -233,7 +233,7 @@ function BusinessForm({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Tell customers about your services, experience, and what makes you special…"
               rows={4}
-              className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent resize-none"
+              className="w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent resize-none"
             />
           </div>
 
@@ -265,13 +265,13 @@ function BusinessForm({
           </div>
 
           {error && (
-            <p className="text-xs text-red-400 bg-red-900/20 px-3 py-2 rounded-lg">{error}</p>
+            <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+            className="w-full bg-[#C4909A] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#A87580] active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed mt-1"
           >
             {loading ? "Submitting…" : "Submit application"}
           </button>
@@ -286,18 +286,18 @@ function BusinessForm({
 function SuccessScreen() {
   return (
     <div className="w-full max-w-md mx-auto text-center">
-      <div className="w-16 h-16 rounded-full bg-[#45c97a]/15 flex items-center justify-center mx-auto mb-6">
-        <svg className="w-8 h-8 text-[#45c97a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="w-16 h-16 rounded-full bg-[#C4909A]/15 flex items-center justify-center mx-auto mb-6">
+        <svg className="w-8 h-8 text-[#C4909A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <h1 className="text-2xl font-bold text-white mb-3">Application submitted</h1>
-      <p className="text-slate-400 text-sm leading-relaxed">
+      <h1 className="text-2xl font-bold text-[#2D1A1F] mb-3">Application submitted</h1>
+      <p className="text-[#9E7580] text-sm leading-relaxed">
         Our team will review your listing and you&apos;ll hear back from us shortly. You&apos;ll get an email when it&apos;s approved.
       </p>
-      <p className="text-slate-500 text-xs mt-4">
+      <p className="text-[#B09098] text-xs mt-4">
         You can update your details from your{" "}
-        <a href="/account" className="text-[#45c97a] hover:underline">account page</a>{" "}
+        <a href="/account" className="text-[#C4909A] hover:underline">account page</a>{" "}
         while you wait.
       </p>
     </div>
@@ -340,9 +340,9 @@ export default function UpgradePage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-[#080f18] px-4 py-12 flex flex-col items-center justify-center">
+    <main className="min-h-screen bg-transparent px-4 py-12 flex flex-col items-center justify-center">
       {state === "checking" && (
-        <div className="w-8 h-8 rounded-full border-2 border-white/10 border-t-[#45c97a] animate-spin" />
+        <div className="w-8 h-8 rounded-full border-2 border-[#2D1A1F]/10 border-t-[#C4909A] animate-spin" />
       )}
       {state === "form" && (
         <BusinessForm userEmail={userEmail} onSuccess={() => setState("success")} />

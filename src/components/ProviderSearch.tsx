@@ -58,7 +58,7 @@ export default function ProviderSearch({ providers }: Props) {
       {/* Search bar */}
       <div className="relative mb-4">
         <svg
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-[#B09098] w-5 h-5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -70,7 +70,7 @@ export default function ProviderSearch({ providers }: Props) {
           placeholder="Search by business name..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-3.5 text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent"
+          className="w-full pl-12 pr-4 py-3.5 text-sm bg-[#FFF5F0] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent"
         />
       </div>
 
@@ -84,8 +84,8 @@ export default function ProviderSearch({ providers }: Props) {
               onClick={() => setCategory(c)}
               className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 active
-                  ? "bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white shadow-sm"
-                  : "bg-white/5 border border-white/10 text-slate-400 hover:border-[#45c97a]/50 hover:text-[#45c97a]"
+                  ? "bg-[#C4909A] text-white shadow-sm"
+                  : "bg-[#FFF5F0] border border-[#2D1A1F]/15 text-[#2D1A1F] hover:border-[#C4909A]/50 hover:text-[#C4909A]"
               }`}
             >
               {c === "all" ? "All Services" : toTitleCase(c)}
@@ -95,7 +95,7 @@ export default function ProviderSearch({ providers }: Props) {
       </div>
 
       {/* Results count */}
-      <p className="text-sm text-slate-400 mb-4">
+      <p className="text-sm text-[#9E7580] mb-4">
         {filtered.length > 0
           ? `Found ${filtered.length} ${filtered.length === 1 ? "provider" : "providers"}`
           : "No providers found"}
@@ -109,7 +109,7 @@ export default function ProviderSearch({ providers }: Props) {
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-16 text-slate-500">
+        <div className="text-center py-16 text-[#B09098]">
           <p className="text-4xl mb-3">🔍</p>
           <p className="font-medium">{query.trim() ? <>No results for &ldquo;{query}&rdquo;</> : "No search results"}</p>
           <p className="text-sm mt-1">Try a different search or browse all categories.</p>

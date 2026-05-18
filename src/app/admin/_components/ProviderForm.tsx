@@ -52,8 +52,8 @@ function dataUrlToBlob(dataUrl: string): Blob {
 }
 
 const inputClass =
-  "w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent";
-const labelClass = "block text-xs font-semibold text-slate-300 mb-1";
+  "w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent";
+const labelClass = "block text-xs font-semibold text-[#6B4550] mb-1";
 
 export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, uploadUrl = "/api/admin/upload" }: Props) {
   const [form, setForm] = useState<ProviderFormData>({
@@ -167,19 +167,19 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, 
               alt="Preview"
               width={64}
               height={64}
-              className="rounded-full object-cover border-2 border-white/10 shrink-0"
+              className="rounded-full object-cover border-2 border-[#2D1A1F]/10 shrink-0"
               unoptimized
             />
           ) : (
-            <div className="w-16 h-16 rounded-full bg-[#1a3550] border-2 border-white/10 flex items-center justify-center shrink-0">
-              <span className="text-slate-500 text-xs">No image</span>
+            <div className="w-16 h-16 rounded-full bg-[#F0D8DC] border-2 border-[#2D1A1F]/10 flex items-center justify-center shrink-0">
+              <span className="text-[#B09098] text-xs">No image</span>
             </div>
           )}
           <div className="flex flex-col gap-2">
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
-              className="text-xs bg-[#1a3550] text-slate-300 px-3 py-1.5 rounded-lg hover:bg-[#243f5c] transition-colors"
+              className="text-xs bg-[#F0D8DC] text-[#6B4550] px-3 py-1.5 rounded-lg hover:bg-[#E8C5CC] transition-colors"
             >
               Choose image
             </button>
@@ -207,11 +207,11 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, 
       {/* Categories tag input */}
       <div>
         <label className={labelClass}>Categories *</label>
-        <div className="flex flex-wrap gap-1.5 w-full text-sm bg-[#091624] border border-white/10 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-[#45c97a]/40 min-h-[44px] items-center">
+        <div className="flex flex-wrap gap-1.5 w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-[#C4909A]/40 min-h-[44px] items-center">
           {form.categories.map((cat) => (
-            <span key={cat} className="flex items-center gap-1 bg-[#45c97a]/15 text-[#45c97a] text-xs font-medium px-2 py-0.5 rounded-full">
+            <span key={cat} className="flex items-center gap-1 bg-[#C4909A]/15 text-[#A87580] text-xs font-medium px-2 py-0.5 rounded-full">
               {cat}
-              <button type="button" onClick={() => removeCategory(cat)} className="hover:text-white leading-none">×</button>
+              <button type="button" onClick={() => removeCategory(cat)} className="hover:text-[#2D1A1F] leading-none">×</button>
             </span>
           ))}
           <input
@@ -220,10 +220,10 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, 
             onKeyDown={handleCatKeyDown}
             onBlur={() => { if (catInput.trim()) { addCategory(catInput); setCatInput(""); } }}
             placeholder={form.categories.length === 0 ? "Type a category, press Enter…" : "Add another…"}
-            className="flex-1 min-w-[120px] bg-transparent text-white placeholder-slate-500 outline-none text-sm py-0.5"
+            className="flex-1 min-w-[120px] bg-transparent text-[#2D1A1F] placeholder-[#B09098] outline-none text-sm py-0.5"
           />
         </div>
-        <p className="text-xs text-slate-500 mt-1">Press Enter or comma to add. Backspace to remove last.</p>
+        <p className="text-xs text-[#B09098] mt-1">Press Enter or comma to add. Backspace to remove last.</p>
       </div>
 
       <div>
@@ -289,13 +289,13 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, 
       </div>
 
       {error && (
-        <p className="text-xs text-red-400 bg-red-900/20 px-3 py-2 rounded-lg">{error}</p>
+        <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
       )}
 
       <button
         type="submit"
         disabled={loading}
-        className="self-start bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+        className="self-start bg-[#C4909A] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#A87580] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {loading ? "Saving…" : submitLabel}
       </button>

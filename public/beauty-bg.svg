@@ -1,0 +1,311 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="800" viewBox="0 0 500 800">
+  <g fill="none" stroke="#2D1A1F" stroke-opacity="0.07" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- ===== ROW 1 (y: 15–80) ===== -->
+
+    <!-- Lipstick -->
+    <g transform="translate(38,50)">
+      <rect x="-5" y="0" width="10" height="13" rx="1.5"/>
+      <rect x="-6" y="12" width="12" height="5" rx="1.5"/>
+      <path d="M-5,0 L0,-9 L5,0"/>
+    </g>
+
+    <!-- 4-point sparkle -->
+    <g transform="translate(110,28)">
+      <path d="M0,-8 L1.4,-1.4 L8,0 L1.4,1.4 L0,8 L-1.4,1.4 L-8,0 L-1.4,-1.4 Z"/>
+    </g>
+
+    <!-- Scissors -->
+    <g transform="translate(205,55) rotate(-25)">
+      <circle cx="-5" cy="-6" r="3.5"/>
+      <circle cx="-5" cy="6" r="3.5"/>
+      <line x1="-2" y1="-4" x2="12" y2="10"/>
+      <line x1="-2" y1="4" x2="12" y2="-10"/>
+    </g>
+
+    <!-- Nail polish -->
+    <g transform="translate(318,42)">
+      <rect x="-4" y="0" width="8" height="14" rx="3"/>
+      <rect x="-3" y="-4" width="6" height="5" rx="1"/>
+      <line x1="-1" y1="-7" x2="-1" y2="-4"/>
+      <line x1="-1" y1="-7" x2="3" y2="-9"/>
+    </g>
+
+    <!-- Makeup brush (tall, vertical) -->
+    <g transform="translate(418,38)">
+      <line x1="0" y1="-17" x2="0" y2="7"/>
+      <ellipse cx="0" cy="11" rx="3.5" ry="5"/>
+    </g>
+
+    <!-- Comb (partial, near right edge) -->
+    <g transform="translate(490,68)">
+      <rect x="-13" y="-4" width="26" height="6" rx="1.5"/>
+      <line x1="-10" y1="2" x2="-10" y2="9"/>
+      <line x1="-6" y1="2" x2="-6" y2="9"/>
+      <line x1="-2" y1="2" x2="-2" y2="9"/>
+      <line x1="2" y1="2" x2="2" y2="9"/>
+      <line x1="6" y1="2" x2="6" y2="9"/>
+      <line x1="10" y1="2" x2="10" y2="9"/>
+    </g>
+
+    <!-- ===== ROW 2 (y: 110–180) ===== -->
+
+    <!-- Heart -->
+    <g transform="translate(68,138)">
+      <path d="M0,8 C-1,5 -10,0 -10,-5 A5.5,5.5,0,0,1,0,-2 A5.5,5.5,0,0,1,10,-5 C10,0 1,5 0,8 Z"/>
+    </g>
+
+    <!-- Mirror -->
+    <g transform="translate(178,158)">
+      <ellipse cx="0" cy="-4" rx="8" ry="9"/>
+      <line x1="0" y1="5" x2="0" y2="13"/>
+      <line x1="-5" y1="13" x2="5" y2="13"/>
+    </g>
+
+    <!-- Perfume bottle -->
+    <g transform="translate(290,148)">
+      <rect x="-6" y="-1" width="12" height="16" rx="4"/>
+      <rect x="-3" y="-5" width="6" height="5" rx="1"/>
+      <line x1="0" y1="-8" x2="0" y2="-5"/>
+      <line x1="0" y1="-8" x2="4" y2="-10"/>
+    </g>
+
+    <!-- Eye with lashes -->
+    <g transform="translate(398,162)">
+      <path d="M-13,0 Q0,-8 13,0 Q0,8 -13,0 Z"/>
+      <circle cx="0" cy="0" r="4"/>
+      <line x1="-8" y1="-5" x2="-10" y2="-10"/>
+      <line x1="-3" y1="-8" x2="-3" y2="-13"/>
+      <line x1="3" y1="-8" x2="4" y2="-13"/>
+      <line x1="8" y1="-5" x2="11" y2="-9"/>
+    </g>
+
+    <!-- Small sparkle -->
+    <g transform="translate(478,125)">
+      <path d="M0,-6 L1,-1 L6,0 L1,1 L0,6 L-1,1 L-6,0 L-1,-1 Z"/>
+    </g>
+
+    <!-- ===== ROW 3 (y: 220–310) ===== -->
+
+    <!-- Crown -->
+    <g transform="translate(52,268)">
+      <polyline points="-11,8 -11,-2 -5,5 0,-9 5,5 11,-2 11,8"/>
+      <line x1="-11" y1="8" x2="11" y2="8"/>
+    </g>
+
+    <!-- Flower -->
+    <g transform="translate(158,292)">
+      <circle cx="0" cy="0" r="3.5"/>
+      <ellipse cx="0" cy="-9" rx="2.5" ry="4"/>
+      <ellipse cx="0" cy="9" rx="2.5" ry="4"/>
+      <ellipse cx="-9" cy="0" rx="4" ry="2.5"/>
+      <ellipse cx="9" cy="0" rx="4" ry="2.5"/>
+      <ellipse cx="-5.5" cy="-5.5" rx="2.5" ry="4" transform="rotate(45,-5.5,-5.5)"/>
+      <ellipse cx="5.5" cy="-5.5" rx="2.5" ry="4" transform="rotate(-45,5.5,-5.5)"/>
+      <ellipse cx="-5.5" cy="5.5" rx="2.5" ry="4" transform="rotate(-45,-5.5,5.5)"/>
+      <ellipse cx="5.5" cy="5.5" rx="2.5" ry="4" transform="rotate(45,5.5,5.5)"/>
+    </g>
+
+    <!-- Hair dryer -->
+    <g transform="translate(290,258)">
+      <path d="M-14,-5 L9,-10 L14,0 L9,10 L-14,5 Z"/>
+      <line x1="8" y1="10" x2="6" y2="18"/>
+      <line x1="-14" y1="-5" x2="-14" y2="5"/>
+    </g>
+
+    <!-- 4-point star -->
+    <g transform="translate(402,288)">
+      <path d="M0,-9 L1.5,-1.5 L9,0 L1.5,1.5 L0,9 L-1.5,1.5 L-9,0 L-1.5,-1.5 Z"/>
+    </g>
+
+    <!-- Lips -->
+    <g transform="translate(478,250)">
+      <path d="M-10,2 Q-5,-5 0,-4 Q5,-5 10,2 Q5,8 0,6 Q-5,8 -10,2 Z"/>
+      <path d="M-10,2 Q0,-0.5 10,2"/>
+    </g>
+
+    <!-- Lipstick (mid) -->
+    <g transform="translate(240,230)">
+      <rect x="-5" y="0" width="10" height="13" rx="1.5"/>
+      <rect x="-6" y="12" width="12" height="5" rx="1.5"/>
+      <path d="M-5,0 L0,-9 L5,0"/>
+    </g>
+
+    <!-- ===== ROW 4 (y: 345–445) ===== -->
+
+    <!-- Nail file (rotated) -->
+    <g transform="translate(78,398) rotate(40)">
+      <rect x="-3" y="-17" width="6" height="34" rx="3"/>
+    </g>
+
+    <!-- Perfume -->
+    <g transform="translate(195,372)">
+      <rect x="-5" y="-1" width="10" height="14" rx="3.5"/>
+      <rect x="-2.5" y="-4" width="5" height="4" rx="1"/>
+      <line x1="0" y1="-7" x2="0" y2="-4"/>
+      <line x1="0" y1="-7" x2="3.5" y2="-9"/>
+    </g>
+
+    <!-- Brush (angled) -->
+    <g transform="translate(318,418) rotate(30)">
+      <line x1="0" y1="-17" x2="0" y2="7"/>
+      <ellipse cx="0" cy="11" rx="3.5" ry="5"/>
+    </g>
+
+    <!-- Scissors -->
+    <g transform="translate(428,395) rotate(15)">
+      <circle cx="-5" cy="-6" r="3.5"/>
+      <circle cx="-5" cy="6" r="3.5"/>
+      <line x1="-2" y1="-4" x2="12" y2="10"/>
+      <line x1="-2" y1="4" x2="12" y2="-10"/>
+    </g>
+
+    <!-- Heart small -->
+    <g transform="translate(498,432)">
+      <path d="M0,6 C-1,3 -8,0 -8,-4 A4,4,0,0,1,0,-2 A4,4,0,0,1,8,-4 C8,0 1,3 0,6 Z"/>
+    </g>
+
+    <!-- Mirror (right) -->
+    <g transform="translate(462,348)">
+      <ellipse cx="0" cy="-4" rx="7" ry="8"/>
+      <line x1="0" y1="4" x2="0" y2="11"/>
+      <line x1="-4" y1="11" x2="4" y2="11"/>
+    </g>
+
+    <!-- Sparkle (mid-row) -->
+    <g transform="translate(248,390)">
+      <path d="M0,-7 L1.2,-1.2 L7,0 L1.2,1.2 L0,7 L-1.2,1.2 L-7,0 L-1.2,-1.2 Z"/>
+    </g>
+
+    <!-- ===== ROW 5 (y: 490–572) ===== -->
+
+    <!-- Mirror -->
+    <g transform="translate(48,530)">
+      <ellipse cx="0" cy="-4" rx="8" ry="9"/>
+      <line x1="0" y1="5" x2="0" y2="13"/>
+      <line x1="-5" y1="13" x2="5" y2="13"/>
+    </g>
+
+    <!-- Comb -->
+    <g transform="translate(172,548)">
+      <rect x="-13" y="-4" width="26" height="6" rx="1.5"/>
+      <line x1="-10" y1="2" x2="-10" y2="9"/>
+      <line x1="-6" y1="2" x2="-6" y2="9"/>
+      <line x1="-2" y1="2" x2="-2" y2="9"/>
+      <line x1="2" y1="2" x2="2" y2="9"/>
+      <line x1="6" y1="2" x2="6" y2="9"/>
+      <line x1="10" y1="2" x2="10" y2="9"/>
+    </g>
+
+    <!-- Nail polish -->
+    <g transform="translate(302,522)">
+      <rect x="-4" y="0" width="8" height="14" rx="3"/>
+      <rect x="-3" y="-4" width="6" height="5" rx="1"/>
+      <line x1="-1" y1="-7" x2="-1" y2="-4"/>
+      <line x1="-1" y1="-7" x2="3" y2="-9"/>
+    </g>
+
+    <!-- Crown -->
+    <g transform="translate(418,545)">
+      <polyline points="-11,8 -11,-2 -5,5 0,-9 5,5 11,-2 11,8"/>
+      <line x1="-11" y1="8" x2="11" y2="8"/>
+    </g>
+
+    <!-- Sparkle -->
+    <g transform="translate(488,510)">
+      <path d="M0,-7 L1.2,-1.2 L7,0 L1.2,1.2 L0,7 L-1.2,1.2 L-7,0 L-1.2,-1.2 Z"/>
+    </g>
+
+    <!-- Lipstick -->
+    <g transform="translate(240,505)">
+      <rect x="-5" y="0" width="10" height="13" rx="1.5"/>
+      <rect x="-6" y="12" width="12" height="5" rx="1.5"/>
+      <path d="M-5,0 L0,-9 L5,0"/>
+    </g>
+
+    <!-- ===== ROW 6 (y: 615–685) ===== -->
+
+    <!-- Eye with lashes -->
+    <g transform="translate(88,648)">
+      <path d="M-13,0 Q0,-8 13,0 Q0,8 -13,0 Z"/>
+      <circle cx="0" cy="0" r="4"/>
+      <line x1="-8" y1="-5" x2="-10" y2="-10"/>
+      <line x1="-3" y1="-8" x2="-3" y2="-13"/>
+      <line x1="3" y1="-8" x2="4" y2="-13"/>
+      <line x1="8" y1="-5" x2="11" y2="-9"/>
+    </g>
+
+    <!-- Lipstick -->
+    <g transform="translate(235,642)">
+      <rect x="-5" y="0" width="10" height="13" rx="1.5"/>
+      <rect x="-6" y="12" width="12" height="5" rx="1.5"/>
+      <path d="M-5,0 L0,-9 L5,0"/>
+    </g>
+
+    <!-- Flower (8-petal) -->
+    <g transform="translate(368,665)">
+      <circle cx="0" cy="0" r="3"/>
+      <ellipse cx="0" cy="-8" rx="2" ry="3.5"/>
+      <ellipse cx="0" cy="8" rx="2" ry="3.5"/>
+      <ellipse cx="-8" cy="0" rx="3.5" ry="2"/>
+      <ellipse cx="8" cy="0" rx="3.5" ry="2"/>
+      <ellipse cx="-5" cy="-5" rx="2" ry="3.5" transform="rotate(45,-5,-5)"/>
+      <ellipse cx="5" cy="-5" rx="2" ry="3.5" transform="rotate(-45,5,-5)"/>
+      <ellipse cx="-5" cy="5" rx="2" ry="3.5" transform="rotate(-45,-5,5)"/>
+      <ellipse cx="5" cy="5" rx="2" ry="3.5" transform="rotate(45,5,5)"/>
+    </g>
+
+    <!-- Hair dryer -->
+    <g transform="translate(475,645)">
+      <path d="M-14,-5 L9,-10 L14,0 L9,10 L-14,5 Z"/>
+      <line x1="8" y1="10" x2="6" y2="18"/>
+      <line x1="-14" y1="-5" x2="-14" y2="5"/>
+    </g>
+
+    <!-- Nail file -->
+    <g transform="translate(312,632) rotate(-35)">
+      <rect x="-3" y="-16" width="6" height="32" rx="3"/>
+    </g>
+
+    <!-- ===== ROW 7 (y: 730–785) ===== -->
+
+    <!-- Brush -->
+    <g transform="translate(38,768) rotate(-10)">
+      <line x1="0" y1="-15" x2="0" y2="6"/>
+      <ellipse cx="0" cy="10" rx="3" ry="4.5"/>
+    </g>
+
+    <!-- Sparkle -->
+    <g transform="translate(155,755)">
+      <path d="M0,-8 L1.4,-1.4 L8,0 L1.4,1.4 L0,8 L-1.4,1.4 L-8,0 L-1.4,-1.4 Z"/>
+    </g>
+
+    <!-- Perfume -->
+    <g transform="translate(288,772)">
+      <rect x="-6" y="-1" width="12" height="16" rx="4"/>
+      <rect x="-3" y="-5" width="6" height="5" rx="1"/>
+      <line x1="0" y1="-8" x2="0" y2="-5"/>
+      <line x1="0" y1="-8" x2="4" y2="-10"/>
+    </g>
+
+    <!-- Scissors -->
+    <g transform="translate(412,750) rotate(20)">
+      <circle cx="-5" cy="-6" r="3.5"/>
+      <circle cx="-5" cy="6" r="3.5"/>
+      <line x1="-2" y1="-4" x2="12" y2="10"/>
+      <line x1="-2" y1="4" x2="12" y2="-10"/>
+    </g>
+
+    <!-- Heart -->
+    <g transform="translate(490,770)">
+      <path d="M0,6 C-1,3 -8,0 -8,-4 A4,4,0,0,1,0,-2 A4,4,0,0,1,8,-4 C8,0 1,3 0,6 Z"/>
+    </g>
+
+    <!-- Lips (bottom strip) -->
+    <g transform="translate(210,762)">
+      <path d="M-9,2 Q-4,-4 0,-3 Q4,-4 9,2 Q4,7 0,5 Q-4,7 -9,2 Z"/>
+      <path d="M-9,2 Q0,0 9,2"/>
+    </g>
+
+  </g>
+</svg>

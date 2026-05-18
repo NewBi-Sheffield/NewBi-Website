@@ -55,7 +55,7 @@ export default function SuggestionModal({ open, onClose }: Props) {
   }
 
   const inputClass =
-    "w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent";
+    "w-full text-sm bg-[#FFF5F0] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent";
 
   return (
     <div
@@ -64,18 +64,18 @@ export default function SuggestionModal({ open, onClose }: Props) {
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-[#2D1A1F]/30 backdrop-blur-sm" />
 
       {/* Panel */}
-      <div className="relative w-full max-w-md bg-[#0a1929] border border-white/10 rounded-2xl shadow-2xl p-6">
+      <div className="relative w-full max-w-md bg-[#FFF5F0] border border-[#2D1A1F]/10 rounded-2xl shadow-2xl p-6">
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h2 className="text-base font-bold text-white">Leave a suggestion</h2>
-            <p className="text-xs text-slate-400 mt-0.5">We read every message — your feedback shapes the site.</p>
+            <h2 className="text-base font-bold text-[#2D1A1F]">Leave a suggestion</h2>
+            <p className="text-xs text-[#9E7580] mt-0.5">We read every message — your feedback shapes the site.</p>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-500 hover:text-white transition-colors ml-4 shrink-0 mt-0.5"
+            className="text-[#B09098] hover:text-[#2D1A1F] transition-colors ml-4 shrink-0 mt-0.5"
             aria-label="Close"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,16 +86,16 @@ export default function SuggestionModal({ open, onClose }: Props) {
 
         {success ? (
           <div className="text-center py-4">
-            <div className="w-12 h-12 rounded-full bg-[#45c97a]/15 flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-[#45c97a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 rounded-full bg-[#C4909A]/15 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-[#C4909A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <p className="text-white font-semibold">Thanks for the feedback!</p>
-            <p className="text-slate-400 text-sm mt-1">We appreciate you taking the time.</p>
+            <p className="text-[#2D1A1F] font-semibold">Thanks for the feedback!</p>
+            <p className="text-[#9E7580] text-sm mt-1">We appreciate you taking the time.</p>
             <button
               onClick={onClose}
-              className="mt-5 text-sm text-[#45c97a] hover:underline font-medium"
+              className="mt-5 text-sm text-[#C4909A] hover:underline font-medium"
             >
               Close
             </button>
@@ -104,7 +104,7 @@ export default function SuggestionModal({ open, onClose }: Props) {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Name</label>
+                <label className="block text-xs font-semibold text-[#6B4550] mb-1">Name</label>
                 <input
                   required
                   value={name}
@@ -114,7 +114,7 @@ export default function SuggestionModal({ open, onClose }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Email</label>
+                <label className="block text-xs font-semibold text-[#6B4550] mb-1">Email</label>
                 <input
                   type="email"
                   required
@@ -127,25 +127,25 @@ export default function SuggestionModal({ open, onClose }: Props) {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Message</label>
+              <label className="block text-xs font-semibold text-[#6B4550] mb-1">Message</label>
               <textarea
                 required
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Ideas, feedback, providers you'd love to see…"
                 rows={4}
-                className="w-full text-sm bg-[#091624] border border-white/10 text-white placeholder-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#45c97a]/40 focus:border-transparent resize-none"
+                className="w-full text-sm bg-[#FFF5F0] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#B09098] rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 focus:border-transparent resize-none"
               />
             </div>
 
             {error && (
-              <p className="text-xs text-red-400 bg-red-900/20 px-3 py-2 rounded-lg">{error}</p>
+              <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full bg-[#C4909A] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#A87580] active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? "Sending…" : "Send suggestion"}
             </button>

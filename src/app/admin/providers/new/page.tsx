@@ -38,7 +38,7 @@ export default function NewProviderPage() {
     <>
       <PageHeader title="Add provider" backHref="/admin" backLabel="Back to admin" />
       <main className="max-w-2xl mx-auto px-4 py-8">
-        <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#FFF5F0] rounded-2xl border border-[#2D1A1F]/8 p-6">
           <ProviderForm onSubmit={handleSubmit} submitLabel="Create provider" />
         </div>
       </main>

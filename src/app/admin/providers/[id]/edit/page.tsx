@@ -39,41 +39,41 @@ function InviteSection({ providerId }: { providerId: string }) {
   }
 
   return (
-    <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-6">
-      <h2 className="text-sm font-semibold text-white mb-1">Send invite link</h2>
-      <p className="text-xs text-slate-400 mb-4">
+    <div className="bg-[#FFF5F0] rounded-2xl border border-[#2D1A1F]/8 p-6">
+      <h2 className="text-sm font-semibold text-[#2D1A1F] mb-1">Send invite link</h2>
+      <p className="text-xs text-[#9E7580] mb-4">
         Generates a one-time link you can DM the provider on Instagram. They'll be prompted to set their name and password.
       </p>
       {!link ? (
         <button
           onClick={generateLink}
           disabled={loading}
-          className="bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+          className="bg-[#C4909A] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#A87580] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? "Generating…" : "Generate invite link"}
         </button>
       ) : (
         <div className="flex flex-col gap-2">
-          <p className="text-xs text-slate-400">Invite for <span className="text-white">{providerName}</span> — expires in 7 days or after first use.</p>
+          <p className="text-xs text-[#9E7580]">Invite for <span className="text-[#2D1A1F] font-medium">{providerName}</span> — expires in 7 days or after first use.</p>
           <div className="flex gap-2">
             <input
               readOnly
               value={link}
-              className="flex-1 text-xs bg-[#091624] border border-white/10 text-slate-300 rounded-xl px-3 py-2 truncate"
+              className="flex-1 text-xs bg-[#FAF0E6] border border-[#2D1A1F]/10 text-[#6B4550] rounded-xl px-3 py-2 truncate"
             />
             <button
               onClick={copy}
-              className="shrink-0 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-xl text-xs font-semibold transition-colors"
+              className="shrink-0 bg-[#C4909A]/15 hover:bg-[#C4909A]/25 text-[#A87580] px-3 py-2 rounded-xl text-xs font-semibold transition-colors"
             >
               {copied ? "Copied!" : "Copy"}
             </button>
           </div>
-          <button onClick={generateLink} disabled={loading} className="text-xs text-slate-400 hover:text-white underline text-left w-fit transition-colors">
+          <button onClick={generateLink} disabled={loading} className="text-xs text-[#9E7580] hover:text-[#2D1A1F] underline text-left w-fit transition-colors">
             Regenerate
           </button>
         </div>
       )}
-      {error && <p className="text-xs text-red-400 bg-red-900/20 px-3 py-2 rounded-lg mt-3">{error}</p>}
+      {error && <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg mt-3">{error}</p>}
     </div>
   );
 }
@@ -109,8 +109,8 @@ export default function EditProviderPage({ params }: Props) {
   }, [params]);
 
   if (!isLoggedIn || !isAdmin) return null;
-  if (notFound) return <p className="text-center py-16 text-slate-400">Provider not found.</p>;
-  if (!provider) return <p className="text-center py-16 text-slate-400">Loading…</p>;
+  if (notFound) return <p className="text-center py-16 text-[#9E7580]">Provider not found.</p>;
+  if (!provider) return <p className="text-center py-16 text-[#9E7580]">Loading…</p>;
 
   async function handleSubmit(data: ProviderFormData): Promise<{ error: string | null }> {
     const { data: { session } } = await supabase.auth.getSession();
@@ -179,27 +179,27 @@ export default function EditProviderPage({ params }: Props) {
 
         {/* Approve banner for pending self-signups */}
         {isPending && (
-          <div className="bg-amber-500/10 border border-amber-500/25 rounded-2xl p-5 flex items-center justify-between gap-4">
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-amber-300">Pending approval</p>
-              <p className="text-xs text-amber-400/80 mt-0.5">Review the details below, then approve to make this listing live.</p>
+              <p className="text-sm font-semibold text-amber-700">Pending approval</p>
+              <p className="text-xs text-amber-600/80 mt-0.5">Review the details below, then approve to make this listing live.</p>
             </div>
             <div className="flex items-center gap-3 shrink-0">
               <button
                 onClick={handleApprove}
                 disabled={approving}
-                className="bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+                className="bg-[#C4909A] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#A87580] transition-colors disabled:opacity-60"
               >
                 {approving ? "Approving…" : "Approve listing"}
               </button>
-              <button onClick={handleDelete} disabled={deleting} className="text-sm text-red-400 hover:text-red-300 transition-colors disabled:opacity-50">
+              <button onClick={handleDelete} disabled={deleting} className="text-sm text-red-500 hover:text-red-600 transition-colors disabled:opacity-50">
                 {deleting ? "Deleting…" : "Reject"}
               </button>
             </div>
           </div>
         )}
 
-        <div className="bg-[#0f2236] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#FFF5F0] rounded-2xl border border-[#2D1A1F]/8 p-6">
           <ProviderForm
             initialData={{
               name: provider.name,
@@ -222,15 +222,15 @@ export default function EditProviderPage({ params }: Props) {
 
         {/* Unlisted banner */}
         {isUnlisted && (
-          <div className="bg-slate-500/10 border border-slate-500/25 rounded-2xl p-5 flex items-center justify-between gap-4">
+          <div className="bg-[#FFF5F0] border border-[#2D1A1F]/10 rounded-2xl p-5 flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-slate-300">Currently unlisted</p>
-              <p className="text-xs text-slate-400 mt-0.5">This provider is hidden from the site. Relist to make them visible again.</p>
+              <p className="text-sm font-semibold text-[#2D1A1F]">Currently unlisted</p>
+              <p className="text-xs text-[#9E7580] mt-0.5">This provider is hidden from the site. Relist to make them visible again.</p>
             </div>
             <button
               onClick={handleRelist}
               disabled={approving}
-              className="shrink-0 bg-gradient-to-r from-[#45c97a] to-[#3d88c4] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+              className="shrink-0 bg-[#C4909A] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#A87580] transition-colors disabled:opacity-60"
             >
               {approving ? "Relisting…" : "Relist"}
             </button>
@@ -239,14 +239,14 @@ export default function EditProviderPage({ params }: Props) {
 
         {/* Danger zone — not shown for pending applications (use Reject there instead) */}
         {!isPending && (
-          <div className="bg-[#0f2236] rounded-2xl border border-red-900/30 p-5">
-            <p className="text-xs font-semibold text-red-400 mb-3">Danger zone</p>
+          <div className="bg-[#FFF5F0] rounded-2xl border border-red-200 p-5">
+            <p className="text-xs font-semibold text-red-500 mb-3">Danger zone</p>
             <div className="flex flex-wrap gap-3">
               {!isUnlisted && (
                 <button
                   onClick={handleUnlist}
                   disabled={unlisting}
-                  className="text-sm text-slate-300 border border-white/15 px-4 py-2 rounded-xl hover:bg-white/5 transition-colors disabled:opacity-50"
+                  className="text-sm text-[#6B4550] border border-[#2D1A1F]/15 px-4 py-2 rounded-xl hover:bg-[#2D1A1F]/5 transition-colors disabled:opacity-50"
                 >
                   {unlisting ? "Unlisting…" : "Unlist provider"}
                 </button>
@@ -254,13 +254,13 @@ export default function EditProviderPage({ params }: Props) {
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="text-sm text-red-400 border border-red-900/50 px-4 py-2 rounded-xl hover:bg-red-900/20 transition-colors disabled:opacity-50"
+                className="text-sm text-red-500 border border-red-200 px-4 py-2 rounded-xl hover:bg-red-50 transition-colors disabled:opacity-50"
               >
                 {deleting ? "Deleting…" : "Delete permanently"}
               </button>
             </div>
             {!isUnlisted && (
-              <p className="text-xs text-slate-500 mt-3">Unlisting hides them from the site without deleting their account. Delete permanently removes all data.</p>
+              <p className="text-xs text-[#B09098] mt-3">Unlisting hides them from the site without deleting their account. Delete permanently removes all data.</p>
             )}
           </div>
         )}
