@@ -68,7 +68,7 @@ function OnboardingForm() {
       <main className="min-h-screen bg-transparent flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-red-500 text-sm">{tokenError}</p>
-          <p className="text-[#B09098] text-xs mt-2">Ask your Newbi contact for a new link.</p>
+          <p className="text-[#B09098] text-xs mt-2">Ask your NewBi contact for a new link.</p>
         </div>
       </main>
     );
@@ -101,7 +101,7 @@ function OnboardingForm() {
             </div>
           )}
           <h1 className="text-xl font-bold text-[#2D1A1F] text-center">{providerName}</h1>
-          <p className="text-sm text-[#9E7580] mt-1">Set up your Newbi account</p>
+          <p className="text-sm text-[#9E7580] mt-1">Set up your NewBi account</p>
         </div>
 
         {/* Form */}
