@@ -13,15 +13,15 @@ export function applicationConfirmationHtml({
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /></head>
-<body style="margin:0;padding:0;background:#F5E8EA;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5E8EA;padding:40px 16px;">
+<body style="margin:0;padding:0;background:#FAF0E6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF0E6;padding:40px 16px;">
     <tr><td align="center">
-      <table width="100%" style="max-width:520px;background:#FFFAF8;border-radius:16px;border:1px solid rgba(44,26,31,0.10);overflow:hidden;">
+      <table width="100%" style="max-width:520px;background:#FFF5F0;border-radius:16px;border:1px solid rgba(44,26,31,0.10);overflow:hidden;">
 
         <!-- Header -->
         <tr>
           <td style="padding:32px 32px 24px;border-bottom:1px solid rgba(44,26,31,0.08);">
-            <img src="${SITE_URL}/Logo.png" alt="NewBi" height="32" style="display:block;" />
+            <img src="${SITE_URL}/Logo%20full.png" alt="NewBi" height="32" style="display:block;" />
           </td>
         </tr>
 
