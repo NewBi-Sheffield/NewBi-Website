@@ -39,7 +39,7 @@ export async function sendApplicationReceived({
   await resend.emails.send({
     from: FROM,
     to: email,
-    subject: `We've received your application — ${businessName}`,
+    subject: `We've received your application - ${businessName}`,
     html: applicationReceivedHtml({ name, businessName }),
   });
 }
@@ -75,7 +75,7 @@ export async function sendListingApproved({
   await resend.emails.send({
     from: FROM,
     to: email,
-    subject: `Your NewBi listing is live — ${businessName}`,
+    subject: `Your NewBi listing is live - ${businessName}`,
     html: listingApprovedHtml({ name, businessName, listingUrl }),
   });
 }

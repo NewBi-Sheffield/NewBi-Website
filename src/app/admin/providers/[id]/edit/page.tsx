@@ -54,7 +54,7 @@ function InviteSection({ providerId }: { providerId: string }) {
         </button>
       ) : (
         <div className="flex flex-col gap-2">
-          <p className="text-xs text-[#9E7580]">Invite for <span className="text-[#2D1A1F] font-medium">{providerName}</span> — expires in 7 days or after first use.</p>
+          <p className="text-xs text-[#9E7580]">Invite for <span className="text-[#2D1A1F] font-medium">{providerName}</span> - expires in 7 days or after first use.</p>
           <div className="flex gap-2">
             <input
               readOnly
@@ -237,7 +237,7 @@ export default function EditProviderPage({ params }: Props) {
           </div>
         )}
 
-        {/* Danger zone — not shown for pending applications (use Reject there instead) */}
+        {/* Danger zone - not shown for pending applications (use Reject there instead) */}
         {!isPending && (
           <div className="bg-[#FFF5F0] rounded-2xl border border-red-200 p-5">
             <p className="text-xs font-semibold text-red-500 mb-3">Danger zone</p>
