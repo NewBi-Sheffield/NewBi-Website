@@ -100,14 +100,15 @@ export async function POST(req: NextRequest) {
 
   await adminSupabase
     .from("profiles")
-    .upsert({ id: userId, email: email.trim(), display_name: accountName.trim() }, { onConflict: "id" });
+    .upsert({ id: userId, email: email.trim(), name: accountName.trim() }, { onConflict: "id" });
 
   sendApplicationConfirmation({
     name: accountName.trim(),
     email: email.trim(),
     businessName: name.trim(),
     confirmationUrl,
-  }).catch(console.error);
+  }).then(() => console.log("[email] confirmation sent to", email.trim()))
+    .catch((err) => console.error("[email] failed to send confirmation:", err));
 
   return NextResponse.json({ ok: true, providerId: provider.id });
 }

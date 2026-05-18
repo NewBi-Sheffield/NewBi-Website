@@ -54,7 +54,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
       .eq("id", invite.provider_id),
     adminSupabase
       .from("profiles")
-      .upsert({ id: userId, email, display_name: name }, { onConflict: "id" }),
+      .upsert({ id: userId, email, name }, { onConflict: "id" }),
     adminSupabase
       .from("provider_invites")
       .update({ used_at: new Date().toISOString() })

@@ -2,6 +2,7 @@ import { Resend } from "resend";
 import { applicationConfirmationHtml } from "./emails/applicationConfirmation";
 import { applicationReceivedHtml } from "./emails/applicationReceived";
 import { listingApprovedHtml } from "./emails/listingApproved";
+import { studentConfirmationHtml } from "./emails/studentConfirmation";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -40,6 +41,23 @@ export async function sendApplicationReceived({
     to: email,
     subject: `We've received your application — ${businessName}`,
     html: applicationReceivedHtml({ name, businessName }),
+  });
+}
+
+export async function sendStudentConfirmation({
+  name,
+  email,
+  confirmationUrl,
+}: {
+  name: string;
+  email: string;
+  confirmationUrl: string;
+}) {
+  await resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: "Confirm your Newbi account",
+    html: studentConfirmationHtml({ name, confirmationUrl }),
   });
 }
 
