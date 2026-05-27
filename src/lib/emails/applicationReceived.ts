@@ -19,7 +19,7 @@ export function applicationReceivedHtml({
         <!-- Header -->
         <tr>
           <td style="padding:32px 32px 24px;border-bottom:1px solid rgba(44,26,31,0.08);">
-            <img src="${SITE_URL}/Logo%20full.png" alt="NewBi" height="32" style="display:block;" />
+            <img src="${SITE_URL}/Logo.png" alt="NewBi" height="32" style="display:block;" />
           </td>
         </tr>
 
