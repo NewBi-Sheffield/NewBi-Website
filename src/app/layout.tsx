@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "NewBi - Find Local Service Providers in Sheffield",
     description: "Search and review local service providers in Sheffield. Hairdressers, nail techs, physiotherapists, and more.",
-    images: [{ url: "/Logo%20full.png" }],
+    images: [{ url: "/Logo.png" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "NewBi - Find Local Service Providers in Sheffield",
     description: "Search and review local service providers in Sheffield. Hairdressers, nail techs, physiotherapists, and more.",
-    images: ["/Logo%20full.png"],
+    images: ["/Logo.png"],
   },
 };
 

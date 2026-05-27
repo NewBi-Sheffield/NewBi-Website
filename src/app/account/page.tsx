@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import ProviderForm, { type ProviderFormData } from "@/app/admin/_components/ProviderForm";
 import { type Provider } from "@/lib/db";
+import GalleryManager from "@/components/GalleryManager";
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
 
@@ -254,6 +255,28 @@ function ListingTab() {
   );
 }
 
+// ─── Gallery tab ──────────────────────────────────────────────────────────────
+
+function GalleryTab() {
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setToken(session?.access_token ?? null);
+    });
+  }, []);
+
+  if (!token) return <p className="text-sm text-[#B09098]">Loading…</p>;
+
+  return (
+    <div className="bg-[#FFF5F0] border border-[#2D1A1F]/8 rounded-xl px-6 py-5">
+      <h2 className="text-sm font-semibold text-[#2D1A1F] mb-1">Gallery</h2>
+      <p className="text-xs text-[#9E7580] mb-4">Upload photos and videos that appear on your public profile.</p>
+      <GalleryManager token={token} />
+    </div>
+  );
+}
+
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
 function IconAccount() {
@@ -272,9 +295,17 @@ function IconListing() {
   );
 }
 
+function IconGallery() {
+  return (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-type Tab = "account" | "listing";
+type Tab = "account" | "listing" | "gallery";
 
 export default function AccountPage() {
   const { loading: authLoading, isLoggedIn, email } = useAuth();
@@ -305,6 +336,7 @@ export default function AccountPage() {
   const NAV: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "account", label: "Account", icon: <IconAccount /> },
     ...(isProvider ? [{ id: "listing" as Tab, label: "My listing", icon: <IconListing /> }] : []),
+    ...(isProvider ? [{ id: "gallery" as Tab, label: "Gallery", icon: <IconGallery /> }] : []),
   ];
 
   // Simple single-column layout for non-providers
@@ -329,7 +361,7 @@ export default function AccountPage() {
       <aside className="w-56 shrink-0 border-r border-[#2D1A1F]/8 flex flex-col">
         <div className="px-5 py-6 border-b border-[#2D1A1F]/8">
           <Link href="/">
-            <img src="/logo-Transparent.png" alt="NewBi" className="h-7" />
+            <img src="/Logo.png" alt="NewBi" className="h-7" />
           </Link>
           <p className="text-xs text-[#B09098] mt-1">{email}</p>
         </div>
@@ -364,13 +396,14 @@ export default function AccountPage() {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="px-8 py-5 border-b border-[#2D1A1F]/8">
           <h1 className="text-base font-semibold text-[#2D1A1F]">
-            {tab === "account" ? "Account" : "My listing"}
+            {tab === "account" ? "Account" : tab === "listing" ? "My listing" : "Gallery"}
           </h1>
         </header>
 
         <main className="flex-1 px-8 py-6 overflow-y-auto max-w-2xl">
           {tab === "account" && <AccountTab />}
           {tab === "listing" && <ListingTab />}
+          {tab === "gallery" && <GalleryTab />}
         </main>
       </div>
     </div>
