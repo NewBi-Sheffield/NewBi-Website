@@ -1,12 +1,13 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getProvider } from "@/lib/db";
+import { getProvider, getProviderGallery } from "@/lib/db";
 
 function toTitleCase(s: string) {
   return s.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 import PageHeader from "@/components/PageHeader";
 import ReviewSection from "@/components/ReviewSection";
+import ProviderGallery from "@/components/ProviderGallery";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,10 @@ type Props = {
 
 export default async function ProviderPage({ params }: Props) {
   const { id } = await params;
-  const provider = await getProvider(id);
+  const [provider, galleryItems] = await Promise.all([
+    getProvider(id),
+    getProviderGallery(id),
+  ]);
   if (!provider) notFound();
 
   return (
@@ -72,6 +76,9 @@ export default async function ProviderPage({ params }: Props) {
               dangerouslySetInnerHTML={{ __html: provider.description }}
             />
           </div>
+
+          {/* Gallery */}
+          <ProviderGallery items={galleryItems} />
 
           {/* Reviews (client component handles auth + form) */}
           <ReviewSection providerId={provider.id} reviews={provider.reviews} />

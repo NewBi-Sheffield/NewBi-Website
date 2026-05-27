@@ -1,5 +1,13 @@
 import { supabase } from "./supabase";
 
+export type GalleryItem = {
+  id: string;
+  provider_id: string;
+  url: string;
+  type: "image" | "video";
+  created_at: string;
+};
+
 export type Review = {
   id: string;
   provider_id: string;
@@ -68,6 +76,17 @@ export async function insertReview(
   });
 
   return { error: error?.message ?? null };
+}
+
+export async function getProviderGallery(providerId: string): Promise<GalleryItem[]> {
+  const { data, error } = await supabase
+    .from("provider_gallery")
+    .select("*")
+    .eq("provider_id", providerId)
+    .order("created_at", { ascending: true });
+
+  if (error) return [];
+  return (data ?? []) as GalleryItem[];
 }
 
 export function averageRating(reviews: Review[]): number {
