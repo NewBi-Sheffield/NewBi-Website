@@ -110,7 +110,9 @@ export async function POST(req: NextRequest) {
       confirmationUrl,
     });
   } catch (err) {
-    console.error("[email] failed to send confirmation:", err);
+    // Non-fatal — provider record is already created. Log the full error so
+    // Resend issues (domain not verified, invalid key, etc.) are visible.
+    console.error("[email] failed to send provider confirmation:", JSON.stringify(err, null, 2));
   }
 
   return NextResponse.json({ ok: true, providerId: provider.id });

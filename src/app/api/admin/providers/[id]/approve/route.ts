@@ -38,12 +38,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     .eq("id", provider.user_id)
     .single();
 
-  sendListingApproved({
-    name: profile?.name ?? provider.name,
-    email: provider.email,
-    businessName: provider.name,
-    listingUrl: `${SITE_URL}/providers/${id}`,
-  }).catch(console.error);
+  try {
+    await sendListingApproved({
+      name: profile?.name ?? provider.name,
+      email: provider.email,
+      businessName: provider.name,
+      listingUrl: `${SITE_URL}/providers/${id}`,
+    });
+  } catch (err) {
+    console.error("[email] failed to send listing approved:", JSON.stringify(err, null, 2));
+  }
 
   return NextResponse.json({ ok: true });
 }

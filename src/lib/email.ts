@@ -8,6 +8,12 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM = "NewBi <hello@newbi.co.uk>";
 
+async function send(payload: Parameters<typeof resend.emails.send>[0]) {
+  const { data, error } = await resend.emails.send(payload);
+  if (error) throw error;
+  return data;
+}
+
 export async function sendApplicationConfirmation({
   name,
   email,
@@ -19,7 +25,7 @@ export async function sendApplicationConfirmation({
   businessName: string;
   confirmationUrl: string;
 }) {
-  await resend.emails.send({
+  return send({
     from: FROM,
     to: email,
     subject: "Confirm your email to complete your NewBi application",
@@ -36,7 +42,7 @@ export async function sendApplicationReceived({
   email: string;
   businessName: string;
 }) {
-  await resend.emails.send({
+  return send({
     from: FROM,
     to: email,
     subject: `We've received your application - ${businessName}`,
@@ -53,7 +59,7 @@ export async function sendStudentConfirmation({
   email: string;
   confirmationUrl: string;
 }) {
-  await resend.emails.send({
+  return send({
     from: FROM,
     to: email,
     subject: "Confirm your NewBi account",
@@ -72,7 +78,7 @@ export async function sendListingApproved({
   businessName: string;
   listingUrl: string;
 }) {
-  await resend.emails.send({
+  return send({
     from: FROM,
     to: email,
     subject: `Your NewBi listing is live - ${businessName}`,

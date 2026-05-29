@@ -1,0 +1,6 @@
+// Stub environment variables needed by modules that initialise clients at import time
+process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
+process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key'
+process.env.NEXT_PUBLIC_SITE_URL = 'https://test.newbi.co.uk'
+process.env.RESEND_API_KEY = 're_test_key'

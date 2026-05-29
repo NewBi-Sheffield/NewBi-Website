@@ -75,11 +75,15 @@ export async function POST(req: NextRequest) {
     .eq("id", user.id)
     .single();
 
-  sendApplicationReceived({
-    name: profile?.name ?? name.trim(),
-    email: finalEmail,
-    businessName: name.trim(),
-  }).catch(console.error);
+  try {
+    await sendApplicationReceived({
+      name: profile?.name ?? name.trim(),
+      email: finalEmail,
+      businessName: name.trim(),
+    });
+  } catch (err) {
+    console.error("[email] failed to send application received:", JSON.stringify(err, null, 2));
+  }
 
   return NextResponse.json({ ok: true });
 }

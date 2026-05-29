@@ -47,11 +47,15 @@ export async function POST(req: NextRequest) {
     .from("profiles")
     .upsert({ id: linkData.user.id, email: email.trim(), name: name.trim() }, { onConflict: "id" });
 
-  sendStudentConfirmation({
-    name: name.trim(),
-    email: email.trim(),
-    confirmationUrl: linkData.properties.action_link,
-  }).catch(console.error);
+  try {
+    await sendStudentConfirmation({
+      name: name.trim(),
+      email: email.trim(),
+      confirmationUrl: linkData.properties.action_link,
+    });
+  } catch (err) {
+    console.error("[email] failed to send student confirmation:", err);
+  }
 
   return NextResponse.json({ ok: true });
 }
