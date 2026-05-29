@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
 
   await adminSupabase
     .from("profiles")
-    .upsert({ id: userId, email: email.trim(), name: accountName.trim() }, { onConflict: "id" });
+    .upsert({ id: userId, email: email.trim(), name: accountName.trim(), is_provider: true }, { onConflict: "id" });
 
   try {
     await sendApplicationConfirmation({
