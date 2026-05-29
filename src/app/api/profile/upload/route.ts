@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     .from("user-avatars")
     .getPublicUrl(filename);
 
-  await adminSupabase.from("profiles").update({ avatar_url: publicUrl }).eq("user_id", user.id);
+  await adminSupabase.from("profiles").update({ avatar_url: publicUrl }).eq("id", user.id);
 
   return NextResponse.json({ url: publicUrl });
 }
