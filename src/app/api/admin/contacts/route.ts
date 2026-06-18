@@ -53,5 +53,6 @@ function toRow(c: Record<string, unknown>) {
     notes:            c.notes            ?? null,
     phone:            c.phone            ?? null,
     website:          c.website          ?? null,
+    contacted_at:     (c.contactedAt ?? c.contacted_at) || null,
   };
 }

@@ -30,6 +30,7 @@ export async function PATCH(req: NextRequest, { params }: Props) {
       notes:            body.notes ?? null,
       phone:            body.phone ?? null,
       website:          body.website ?? null,
+      contacted_at:     body.contactedAt || null,
     })
     .eq("id", id)
     .select()

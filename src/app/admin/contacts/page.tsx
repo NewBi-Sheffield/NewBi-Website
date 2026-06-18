@@ -21,6 +21,7 @@ type Contact = {
   notes?: string;
   phone?: string;
   website?: string;
+  contactedAt?: string; // YYYY-MM-DD
 };
 
 type ContactRow = {
@@ -36,6 +37,7 @@ type ContactRow = {
   notes: string | null;
   phone: string | null;
   website: string | null;
+  contacted_at: string | null;
 };
 
 const ALL_STATUSES: ContactStatus[] = ["To contact", "Contacted", "Interviewed", "Live"];
@@ -56,9 +58,12 @@ const STATUS_BADGE: Record<ContactStatus, string> = {
   "Live":       "bg-blue-100 text-blue-700",
 };
 
+const today = () => new Date().toISOString().split("T")[0];
+
 const EMPTY_FORM: Omit<Contact, "id"> = {
   status: "To contact", businessName: "", instagramHandle: "", category: "",
   city: "", followers: undefined, bookingMethod: "", email: "", notes: "", phone: "", website: "",
+  contactedAt: today(),
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -77,7 +82,19 @@ function fromRow(r: ContactRow): Contact {
     notes:           r.notes ?? undefined,
     phone:           r.phone ?? undefined,
     website:         r.website ?? undefined,
+    contactedAt:     r.contacted_at ?? undefined,
   };
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function isOverdue(contactedAt?: string): boolean {
+  if (!contactedAt) return true;
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+  return new Date(contactedAt + "T00:00:00") <= threeMonthsAgo;
 }
 
 async function authHeaders() {
@@ -118,22 +135,29 @@ function ContactCard({ c, onEdit, onDelete }: { c: Contact; onEdit: () => void; 
       {c.notes && <p className="text-sm text-[#6B4550] leading-snug line-clamp-2">{c.notes}</p>}
 
       <div className="border-t border-[#2D1A1F]/6 pt-3 flex items-center gap-3 flex-wrap">
+        {c.contactedAt ? (
+          <span className={`text-xs ${isOverdue(c.contactedAt) ? "text-amber-600 font-medium" : "text-[#B09098]"}`}>
+            {isOverdue(c.contactedAt) ? "⚠ " : ""}Contacted {formatDate(c.contactedAt)}
+          </span>
+        ) : (
+          <span className="text-xs text-amber-600 font-medium">⚠ Never contacted</span>
+        )}
         {c.email && (
-          <a href={`mailto:${c.email}`} className="text-[#B09098] hover:text-[#C4909A] transition-colors">
+          <a href={`mailto:${c.email}`} className="text-[#B09098] hover:text-[#C4909A] transition-colors ml-auto">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </a>
         )}
         {websiteLabel && (
-          <a href={c.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-[#6B4550] hover:text-[#C4909A] transition-colors">
+          <a href={c.website} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-1 text-xs text-[#6B4550] hover:text-[#C4909A] transition-colors ${!c.email ? "ml-auto" : ""}`}>
             <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
             </svg>
-            <span className="truncate max-w-[140px]">{websiteLabel}</span>
+            <span className="truncate max-w-[120px]">{websiteLabel}</span>
           </a>
         )}
-        <button onClick={onEdit} className="ml-auto text-sm font-medium text-[#2D1A1F] hover:text-[#C4909A] transition-colors">Edit</button>
+        <button onClick={onEdit} className={`text-sm font-medium text-[#2D1A1F] hover:text-[#C4909A] transition-colors ${!c.email && !websiteLabel ? "ml-auto" : ""}`}>Edit</button>
         <button onClick={onDelete} className="text-[#D8B4B8] hover:text-red-400 transition-colors">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -155,6 +179,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
   const [editing, setEditing] = useState<Contact | null>(null);
   const [form, setForm] = useState<Omit<Contact, "id">>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [overdueOnly, setOverdueOnly] = useState(false);
 
   async function load() {
     const headers = await authHeaders();
@@ -169,10 +194,10 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
   useEffect(() => { load(); }, []);
   useEffect(() => { onOpenAdd(openAdd); }, []);
 
-  function openAdd() { setEditing(null); setForm(EMPTY_FORM); setPanelOpen(true); }
+  function openAdd() { setEditing(null); setForm({ ...EMPTY_FORM, contactedAt: today() }); setPanelOpen(true); }
   function openEdit(c: Contact) {
     setEditing(c);
-    setForm({ status: c.status, businessName: c.businessName, instagramHandle: c.instagramHandle, category: c.category, city: c.city, followers: c.followers, bookingMethod: c.bookingMethod, email: c.email, notes: c.notes, phone: c.phone, website: c.website });
+    setForm({ status: c.status, businessName: c.businessName, instagramHandle: c.instagramHandle, category: c.category, city: c.city, followers: c.followers, bookingMethod: c.bookingMethod, email: c.email, notes: c.notes, phone: c.phone, website: c.website, contactedAt: c.contactedAt ?? today() });
     setPanelOpen(true);
   }
   function closePanel() { setPanelOpen(false); setEditing(null); }
@@ -206,15 +231,18 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
     setContacts((prev) => prev.filter((c) => c.id !== id));
   }
 
+  const overdueCount = contacts.filter((c) => isOverdue(c.contactedAt)).length;
+
   const filtered = contacts.filter((c) => {
     const matchesStatus = statusFilter === "All" || c.status === statusFilter;
+    const matchesOverdue = !overdueOnly || isOverdue(c.contactedAt);
     const q = query.toLowerCase();
     const matchesQuery = !q ||
       c.businessName.toLowerCase().includes(q) ||
       (c.instagramHandle ?? "").toLowerCase().includes(q) ||
       c.category.toLowerCase().includes(q) ||
       (c.notes ?? "").toLowerCase().includes(q);
-    return matchesStatus && matchesQuery;
+    return matchesStatus && matchesOverdue && matchesQuery;
   });
 
   const statusCounts = Object.fromEntries(
@@ -269,6 +297,23 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
           </button>
         ))}
       </div>
+
+      {/* Follow-up filter */}
+      {overdueCount > 0 && (
+        <button
+          onClick={() => setOverdueOnly((v) => !v)}
+          className={`self-start flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
+            overdueOnly
+              ? "bg-amber-500 text-white border-amber-500"
+              : "bg-amber-50 text-amber-700 border-amber-200 hover:border-amber-400"
+          }`}
+        >
+          <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Needs follow-up ({overdueCount})
+        </button>
+      )}
 
       {loading ? (
         <p className="text-sm text-[#B09098] text-center py-12">Loading…</p>
@@ -325,6 +370,15 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                   ))}
                 </div>
               </div>
+              <label className={labelCls}>
+                <span className={labelTextCls}>Date contacted</span>
+                <input
+                  type="date"
+                  value={form.contactedAt ?? ""}
+                  onChange={(e) => setForm((f) => ({ ...f, contactedAt: e.target.value || undefined }))}
+                  className={inputCls}
+                />
+              </label>
               <label className={labelCls}>
                 <span className={labelTextCls}>Instagram handle</span>
                 <div className="flex items-center bg-[#FAF7F5] border border-[#2D1A1F]/10 rounded-xl px-4 py-3 gap-2 focus-within:ring-2 focus-within:ring-[#C4909A]/40">
