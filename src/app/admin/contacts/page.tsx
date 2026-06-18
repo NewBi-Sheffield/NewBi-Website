@@ -371,13 +371,8 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                 </div>
               </div>
               <label className={labelCls}>
-                <span className={labelTextCls}>Date contacted</span>
-                <input
-                  type="date"
-                  value={form.contactedAt ?? ""}
-                  onChange={(e) => setForm((f) => ({ ...f, contactedAt: e.target.value || undefined }))}
-                  className={inputCls}
-                />
+                <span className={labelTextCls}>Business name</span>
+                <input value={form.businessName} onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))} placeholder="e.g. Nails by Sophie" className={inputCls} />
               </label>
               <label className={labelCls}>
                 <span className={labelTextCls}>Instagram handle</span>
@@ -385,10 +380,6 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                   <span className="text-[#B09098] text-base font-medium">@</span>
                   <input value={form.instagramHandle ?? ""} onChange={(e) => setForm((f) => ({ ...f, instagramHandle: e.target.value }))} placeholder="handle" className="text-base bg-transparent text-[#2D1A1F] placeholder-[#C0A8AF] flex-1 focus:outline-none" />
                 </div>
-              </label>
-              <label className={labelCls}>
-                <span className={labelTextCls}>Business name</span>
-                <input value={form.businessName} onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))} placeholder="e.g. Nails by Sophie" className={inputCls} />
               </label>
               <div className={labelCls}>
                 <span className={labelTextCls}>Category</span>
@@ -418,6 +409,15 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
               <label className={labelCls}>
                 <span className={labelTextCls}>Notes</span>
                 <textarea value={form.notes ?? ""} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} placeholder="Any notes about this contact…" rows={4} className={`${inputCls} resize-none`} />
+              </label>
+              <label className={labelCls}>
+                <span className={labelTextCls}>Date contacted</span>
+                <input
+                  type="date"
+                  value={form.contactedAt ?? ""}
+                  onChange={(e) => setForm((f) => ({ ...f, contactedAt: e.target.value || undefined }))}
+                  className={inputCls}
+                />
               </label>
               <label className={labelCls}>
                 <span className={labelTextCls}>Email</span>
