@@ -6,7 +6,7 @@ import AdminShell from "../_components/AdminShell";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type ContactStatus = "To contact" | "Contacted" | "Interviewed" | "Live";
+type ContactStatus = "To contact" | "Not responded" | "Responded" | "Live";
 
 type Contact = {
   id: string;
@@ -40,22 +40,22 @@ type ContactRow = {
   contacted_at: string | null;
 };
 
-const ALL_STATUSES: ContactStatus[] = ["To contact", "Contacted", "Interviewed", "Live"];
+const ALL_STATUSES: ContactStatus[] = ["To contact", "Not responded", "Responded", "Live"];
 
 const VALID_STATUSES = new Set<string>(ALL_STATUSES);
 
 const STATUS_DOT: Record<ContactStatus, string> = {
-  "To contact": "bg-neutral-400",
-  "Contacted":  "bg-orange-400",
-  "Interviewed":"bg-emerald-600",
-  "Live":       "bg-blue-500",
+  "To contact":   "bg-neutral-400",
+  "Not responded":"bg-orange-400",
+  "Responded":    "bg-emerald-600",
+  "Live":         "bg-blue-500",
 };
 
 const STATUS_BADGE: Record<ContactStatus, string> = {
-  "To contact": "bg-neutral-100 text-neutral-600",
-  "Contacted":  "bg-orange-100 text-orange-700",
-  "Interviewed":"bg-emerald-200 text-emerald-800",
-  "Live":       "bg-blue-100 text-blue-700",
+  "To contact":   "bg-neutral-100 text-neutral-600",
+  "Not responded":"bg-orange-100 text-orange-700",
+  "Responded":    "bg-emerald-200 text-emerald-800",
+  "Live":         "bg-blue-100 text-blue-700",
 };
 
 const today = () => new Date().toISOString().split("T")[0];
@@ -115,12 +115,21 @@ function ContactCard({ c, onEdit, onDelete }: { c: Contact; onEdit: () => void; 
           <span className="text-sm font-bold text-[#A87580]">{initial}</span>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-[#2D1A1F] leading-tight">
-            {c.instagramHandle ? `@${c.instagramHandle}` : c.businessName}
-          </p>
-          <p className="text-xs text-[#9E7580] mt-0.5">
-            {[c.city, c.followers ? `${c.followers.toLocaleString()} followers` : null].filter(Boolean).join(" · ")}
-          </p>
+          {c.instagramHandle ? (
+            <a
+              href={`https://instagram.com/${c.instagramHandle}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-[#2D1A1F] leading-tight hover:text-[#C4909A] transition-colors"
+            >
+              @{c.instagramHandle}
+            </a>
+          ) : (
+            <p className="font-bold text-[#2D1A1F] leading-tight">{c.businessName}</p>
+          )}
+          {c.businessName && c.instagramHandle && (
+            <p className="text-xs text-[#9E7580] mt-0.5">{c.businessName}</p>
+          )}
         </div>
         <span className={`shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full ${STATUS_BADGE[c.status]}`}>
           {c.status}
@@ -190,6 +199,27 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
     }
     setLoading(false);
   }
+
+  // Persist form across app switches on mobile
+  useEffect(() => {
+    const saved = sessionStorage.getItem("contact_panel");
+    if (saved) {
+      try {
+        const { form: f, editing: e } = JSON.parse(saved);
+        setForm(f);
+        setEditing(e);
+        setPanelOpen(true);
+      } catch { /* ignore corrupt data */ }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (panelOpen) {
+      sessionStorage.setItem("contact_panel", JSON.stringify({ form, editing }));
+    } else {
+      sessionStorage.removeItem("contact_panel");
+    }
+  }, [panelOpen, form, editing]);
 
   useEffect(() => { load(); }, []);
   useEffect(() => { onOpenAdd(openAdd); }, []);
@@ -375,10 +405,24 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                 <input value={form.businessName} onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))} placeholder="e.g. Nails by Sophie" className={inputCls} />
               </label>
               <label className={labelCls}>
-                <span className={labelTextCls}>Instagram handle</span>
+                <span className={labelTextCls}>Instagram handle or profile link</span>
                 <div className="flex items-center bg-[#FAF7F5] border border-[#2D1A1F]/10 rounded-xl px-4 py-3 gap-2 focus-within:ring-2 focus-within:ring-[#C4909A]/40">
                   <span className="text-[#B09098] text-base font-medium">@</span>
-                  <input value={form.instagramHandle ?? ""} onChange={(e) => setForm((f) => ({ ...f, instagramHandle: e.target.value }))} placeholder="handle" className="text-base bg-transparent text-[#2D1A1F] placeholder-[#C0A8AF] flex-1 focus:outline-none" />
+                  <input
+                    value={form.instagramHandle ?? ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      const igMatch = val.match(/instagram\.com\/([a-zA-Z0-9_.]+)/);
+                      if (igMatch) {
+                        const handle = igMatch[1];
+                        setForm((f) => ({ ...f, instagramHandle: handle, businessName: f.businessName || handle }));
+                      } else {
+                        setForm((f) => ({ ...f, instagramHandle: val.replace(/^@/, "") }));
+                      }
+                    }}
+                    placeholder="handle or instagram.com/…"
+                    className="text-base bg-transparent text-[#2D1A1F] placeholder-[#C0A8AF] flex-1 focus:outline-none"
+                  />
                 </div>
               </label>
               <div className={labelCls}>
