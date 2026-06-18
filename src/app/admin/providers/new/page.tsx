@@ -30,13 +30,13 @@ export default function NewProviderPage() {
     });
     const body = await res.json();
     if (!res.ok) return { error: body.error ?? "Failed to create provider" };
-    router.push("/admin");
+    router.push("/admin/providers");
     return { error: null };
   }
 
   return (
     <>
-      <PageHeader title="Add provider" backHref="/admin" backLabel="Back to admin" />
+      <PageHeader title="Add provider" backHref="/admin/providers" backLabel="Back to admin" />
       <main className="max-w-2xl mx-auto px-4 py-8">
         <div className="bg-[#FFF5F0] rounded-2xl border border-[#2D1A1F]/8 p-6">
           <ProviderForm onSubmit={handleSubmit} submitLabel="Create provider" />

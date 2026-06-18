@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function PageHeader({ title, subtitle, backHref, backLabel, showJoinUs }: Props) {
-  const { isLoggedIn, email, logout } = useAuth();
+  const { isLoggedIn, isAdmin, email, logout } = useAuth();
   const [suggestionOpen, setSuggestionOpen] = useState(false);
 
   return (
@@ -60,6 +60,14 @@ export default function PageHeader({ title, subtitle, backHref, backLabel, showJ
 
           {isLoggedIn ? (
             <div className="flex items-center gap-2">
+              {isAdmin && (
+                <Link
+                  href="/admin/providers"
+                  className="text-xs font-semibold text-[#A87580] bg-[#C4909A]/10 hover:bg-[#C4909A]/20 border border-[#C4909A]/20 px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  Admin
+                </Link>
+              )}
               <Link
                 href="/account"
                 className="w-8 h-8 rounded-full bg-[#C4909A]/20 flex items-center justify-center text-[#2D1A1F] font-bold text-sm hover:bg-[#C4909A]/30 transition-colors"

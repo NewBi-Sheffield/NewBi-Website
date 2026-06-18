@@ -1,6 +1,13 @@
 "use client";
 
 import { useState, useRef, KeyboardEvent } from "react";
+
+const PRESET_CATEGORIES = [
+  "Nails", "Lashes", "Brows", "Hair", "Makeup", "Skincare",
+  "Beauty", "Aesthetics", "Massage", "Sports Massage",
+  "Holistic", "Reflexology", "Wellness", "Hair Removal",
+  "Waxing", "Tanning", "Tattoo", "Piercing", "Barber",
+];
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import RichTextEditor from "@/components/RichTextEditor";
@@ -69,6 +76,7 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, 
   });
 
   const [catInput, setCatInput] = useState("");
+  const [showCustomInput, setShowCustomInput] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(initialData.profile_picture_url ?? null);
   const [loading, setLoading] = useState(false);
@@ -204,26 +212,71 @@ export default function ProviderForm({ initialData = {}, onSubmit, submitLabel, 
         />
       </div>
 
-      {/* Categories tag input */}
+      {/* Categories — preset pills + custom */}
       <div>
         <label className={labelClass}>Categories *</label>
-        <div className="flex flex-wrap gap-1.5 w-full text-sm bg-[#FAF0E6] border border-[#2D1A1F]/10 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-[#C4909A]/40 min-h-[44px] items-center">
-          {form.categories.map((cat) => (
-            <span key={cat} className="flex items-center gap-1 bg-[#C4909A]/15 text-[#A87580] text-xs font-medium px-2 py-0.5 rounded-full">
-              {cat}
-              <button type="button" onClick={() => removeCategory(cat)} className="hover:text-[#2D1A1F] leading-none">×</button>
-            </span>
-          ))}
-          <input
-            value={catInput}
-            onChange={(e) => setCatInput(e.target.value)}
-            onKeyDown={handleCatKeyDown}
-            onBlur={() => { if (catInput.trim()) { addCategory(catInput); setCatInput(""); } }}
-            placeholder={form.categories.length === 0 ? "Type a category, press Enter…" : "Add another…"}
-            className="flex-1 min-w-[120px] bg-transparent text-[#2D1A1F] placeholder-[#B09098] outline-none text-sm py-0.5"
-          />
+        <div className="flex flex-wrap gap-2 mt-1">
+          {PRESET_CATEGORIES.map((cat) => {
+            const selected = form.categories.includes(cat);
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => selected ? removeCategory(cat) : addCategory(cat)}
+                className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+                  selected
+                    ? "bg-[#C4909A] text-white border-[#C4909A]"
+                    : "bg-transparent text-[#6B4550] border-[#2D1A1F]/20 hover:border-[#C4909A] hover:text-[#C4909A]"
+                }`}
+              >
+                {selected && "✓ "}{cat}
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            onClick={() => setShowCustomInput((v) => !v)}
+            className={`text-xs font-medium px-3 py-1.5 rounded-full border border-dashed transition-colors ${
+              showCustomInput
+                ? "border-[#C4909A] text-[#C4909A]"
+                : "border-[#2D1A1F]/20 text-[#9E7580] hover:border-[#C4909A] hover:text-[#C4909A]"
+            }`}
+          >
+            + Custom
+          </button>
         </div>
-        <p className="text-xs text-[#B09098] mt-1">Press Enter or comma to add. Backspace to remove last.</p>
+
+        {/* Custom input */}
+        {showCustomInput && (
+          <div className="flex gap-2 mt-2">
+            <input
+              value={catInput}
+              onChange={(e) => setCatInput(e.target.value)}
+              onKeyDown={handleCatKeyDown}
+              placeholder="Enter custom category…"
+              className={`${inputClass} flex-1`}
+            />
+            <button
+              type="button"
+              onClick={() => { addCategory(catInput); setCatInput(""); }}
+              className="shrink-0 text-xs bg-[#F0D8DC] text-[#6B4550] px-3 py-1.5 rounded-lg hover:bg-[#E8C5CC] transition-colors"
+            >
+              Add
+            </button>
+          </div>
+        )}
+
+        {/* Custom-added tags (not in presets) */}
+        {form.categories.filter((c) => !PRESET_CATEGORIES.includes(c)).length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {form.categories.filter((c) => !PRESET_CATEGORIES.includes(c)).map((cat) => (
+              <span key={cat} className="flex items-center gap-1 bg-[#C4909A]/15 text-[#A87580] text-xs font-medium px-2.5 py-1 rounded-full">
+                {cat}
+                <button type="button" onClick={() => removeCategory(cat)} className="hover:text-[#2D1A1F] leading-none ml-0.5">×</button>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div>

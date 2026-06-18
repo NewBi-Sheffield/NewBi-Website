@@ -121,7 +121,7 @@ export default function EditProviderPage({ params }: Props) {
     });
     const body = await res.json();
     if (!res.ok) return { error: body.error ?? "Failed to update provider" };
-    router.push("/admin");
+    router.push("/admin/providers");
     return { error: null };
   }
 
@@ -133,7 +133,7 @@ export default function EditProviderPage({ params }: Props) {
       headers: { Authorization: `Bearer ${session?.access_token}` },
     });
     setApproving(false);
-    if (res.ok) router.push("/admin");
+    if (res.ok) router.push("/admin/providers");
   }
 
   async function handleUnlist() {
@@ -144,7 +144,7 @@ export default function EditProviderPage({ params }: Props) {
       method: "POST",
       headers: { Authorization: `Bearer ${session?.access_token}` },
     });
-    router.push("/admin");
+    router.push("/admin/providers");
   }
 
   async function handleRelist() {
@@ -154,7 +154,7 @@ export default function EditProviderPage({ params }: Props) {
       method: "POST",
       headers: { Authorization: `Bearer ${session?.access_token}` },
     });
-    router.push("/admin");
+    router.push("/admin/providers");
   }
 
   async function handleDelete() {
@@ -165,7 +165,7 @@ export default function EditProviderPage({ params }: Props) {
       method: "DELETE",
       headers: { Authorization: `Bearer ${session?.access_token}` },
     });
-    router.push("/admin");
+    router.push("/admin/providers");
   }
 
   const isPending = provider.status === "pending";
@@ -174,7 +174,7 @@ export default function EditProviderPage({ params }: Props) {
 
   return (
     <>
-      <PageHeader title={`Edit: ${provider.name}`} backHref="/admin" backLabel="Back to admin" />
+      <PageHeader title={`Edit: ${provider.name}`} backHref="/admin/providers" backLabel="Back to admin" />
       <main className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-6">
 
         {/* Approve banner for pending self-signups */}
