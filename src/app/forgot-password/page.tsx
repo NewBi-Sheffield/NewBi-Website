@@ -40,9 +40,10 @@ export default function ForgotPasswordPage() {
         />
         <main className="max-w-md mx-auto px-4 py-8">
           <div className="bg-[#FFF5F0] rounded-2xl border border-[#2D1A1F]/10 p-6 text-center">
-            <p className="text-sm text-[#6B4550] mb-4">
+            <p className="text-sm text-[#6B4550] mb-2">
               If <span className="font-semibold text-[#2D1A1F]">{email}</span> has an account, you&apos;ll receive a password reset link shortly.
             </p>
+            <p className="text-xs text-[#9E7580] mb-4">Can&apos;t see it? Check your spam or junk folder.</p>
             <Link
               href="/login"
               className="block w-full bg-[#C4909A] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#A87580] active:scale-95 transition-all text-center"

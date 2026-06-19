@@ -478,7 +478,7 @@ function CheckEmailScreen({ email }: { email: string }) {
         We sent a confirmation link to <span className="text-[#2D1A1F] font-medium">{email}</span>.
         Click it to activate your account.
       </p>
-      <p className="text-[#B09098] text-xs mt-4">The link expires in 24 hours.</p>
+      <p className="text-[#B09098] text-xs mt-4">Can&apos;t see it? Check your spam or junk folder. The link expires in 24 hours.</p>
       <Link
         href="/login"
         className="inline-block mt-6 text-sm text-[#C4909A] hover:underline"
@@ -502,7 +502,7 @@ function ProviderCheckEmailScreen({ email }: { email: string }) {
         We sent a confirmation link to <span className="text-[#2D1A1F] font-medium">{email}</span>.
         Click it to confirm your address and submit your application for review.
       </p>
-      <p className="text-[#B09098] text-xs mt-4">The link expires in 24 hours.</p>
+      <p className="text-[#B09098] text-xs mt-4">Can&apos;t see it? Check your spam or junk folder. The link expires in 24 hours.</p>
     </div>
   );
 }
