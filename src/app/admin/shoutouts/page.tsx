@@ -127,10 +127,15 @@ function ShoutoutCard({ s, onEdit, onDelete }: { s: Shoutout; onEdit: () => void
   );
 }
 
+// ─── Types (contact picker) ───────────────────────────────────────────────────
+
+type ContactOption = { id: string; instagramHandle?: string; businessName: string };
+
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) {
   const [shoutouts, setShoutouts] = useState<Shoutout[]>([]);
+  const [contacts, setContacts] = useState<ContactOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ShoutoutStatus | "All">("All");
@@ -139,13 +144,21 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
   const [editing, setEditing] = useState<Shoutout | null>(null);
   const [form, setForm] = useState<Omit<Shoutout, "id">>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [contactSearch, setContactSearch] = useState("");
 
   async function load() {
     const headers = await authHeaders();
-    const res = await fetch("/api/admin/shoutouts", { headers });
-    if (res.ok) {
-      const rows: ShoutoutRow[] = await res.json();
+    const [shoutoutsRes, contactsRes] = await Promise.all([
+      fetch("/api/admin/shoutouts", { headers }),
+      fetch("/api/admin/contacts", { headers }),
+    ]);
+    if (shoutoutsRes.ok) {
+      const rows: ShoutoutRow[] = await shoutoutsRes.json();
       setShoutouts(rows.map(fromRow));
+    }
+    if (contactsRes.ok) {
+      const rows: { id: string; instagram_handle: string | null; business_name: string }[] = await contactsRes.json();
+      setContacts(rows.map((r) => ({ id: r.id, instagramHandle: r.instagram_handle ?? undefined, businessName: r.business_name })));
     }
     setLoading(false);
   }
@@ -153,13 +166,19 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
   useEffect(() => { load(); }, []);
   useEffect(() => { onOpenAdd(openAdd); }, []);
 
-  function openAdd() { setEditing(null); setForm({ ...EMPTY_FORM, date: today() }); setPanelOpen(true); }
+  function openAdd() { setEditing(null); setForm({ ...EMPTY_FORM, date: today() }); setContactSearch(""); setPanelOpen(true); }
   function openEdit(s: Shoutout) {
     setEditing(s);
     setForm({ instagramHandle: s.instagramHandle, businessName: s.businessName, date: s.date ?? today(), status: s.status, reciprocated: s.reciprocated, notes: s.notes });
+    setContactSearch("");
     setPanelOpen(true);
   }
-  function closePanel() { setPanelOpen(false); setEditing(null); }
+  function closePanel() { setPanelOpen(false); setEditing(null); setContactSearch(""); }
+
+  function pickContact(c: ContactOption) {
+    setForm((f) => ({ ...f, instagramHandle: c.instagramHandle ?? "", businessName: c.businessName }));
+    setContactSearch("");
+  }
 
   async function save() {
     if (!form.instagramHandle?.trim() && !form.businessName?.trim()) return;
@@ -305,6 +324,83 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
             </div>
 
             <div className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-5">
+
+              {/* Contact picker — only shown when adding */}
+              {!editing && (
+                <div className={labelCls}>
+                  <span className={labelTextCls}>Select from contacts</span>
+                  <div className="relative">
+                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#B09098]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input
+                      value={contactSearch}
+                      onChange={(e) => setContactSearch(e.target.value)}
+                      placeholder="Search contacts by name or handle…"
+                      className="text-sm bg-[#FAF7F5] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#C0A8AF] rounded-xl pl-9 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 w-full"
+                    />
+                  </div>
+                  {contactSearch.trim() && (() => {
+                    const q = contactSearch.toLowerCase();
+                    const matches = contacts.filter((c) =>
+                      c.businessName.toLowerCase().includes(q) ||
+                      (c.instagramHandle ?? "").toLowerCase().includes(q)
+                    ).slice(0, 8);
+                    return matches.length > 0 ? (
+                      <div className="border border-[#2D1A1F]/10 rounded-xl overflow-hidden bg-white shadow-sm">
+                        {matches.map((c) => (
+                          <button
+                            key={c.id}
+                            type="button"
+                            onClick={() => pickContact(c)}
+                            className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[#FAF7F5] transition-colors border-b border-[#2D1A1F]/6 last:border-0"
+                          >
+                            <div className="w-7 h-7 rounded-full bg-[#F0D8DC] flex items-center justify-center shrink-0">
+                              <span className="text-xs font-bold text-[#A87580]">
+                                {(c.instagramHandle ?? c.businessName).charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium text-[#2D1A1F] truncate">
+                                {c.instagramHandle ? `@${c.instagramHandle}` : c.businessName}
+                              </p>
+                              {c.instagramHandle && c.businessName && (
+                                <p className="text-xs text-[#9E7580] truncate">{c.businessName}</p>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-[#B09098] px-1">No contacts match — fill in manually below.</p>
+                    );
+                  })()}
+                  {/* Selected contact chip */}
+                  {!contactSearch && (form.instagramHandle || form.businessName) && (
+                    <div className="flex items-center gap-2 px-3 py-2 bg-[#C4909A]/10 rounded-xl">
+                      <span className="text-sm text-[#6B4550] flex-1 truncate">
+                        {form.instagramHandle ? `@${form.instagramHandle}` : form.businessName}
+                        {form.instagramHandle && form.businessName ? ` · ${form.businessName}` : ""}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setForm((f) => ({ ...f, instagramHandle: "", businessName: "" }))}
+                        className="text-[#B09098] hover:text-[#2D1A1F] transition-colors shrink-0"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-3 mt-1">
+                    <div className="flex-1 h-px bg-[#2D1A1F]/8" />
+                    <span className="text-xs text-[#B09098]">or enter manually</span>
+                    <div className="flex-1 h-px bg-[#2D1A1F]/8" />
+                  </div>
+                </div>
+              )}
+
               {/* Status */}
               <div className={labelCls}>
                 <span className={labelTextCls}>Status</span>
