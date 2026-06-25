@@ -353,7 +353,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
       <div className="flex gap-3 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <button
           onClick={() => setStatusFilter("All")}
-          className={`shrink-0 bg-white rounded-2xl p-4 text-left shadow-sm border transition-colors min-w-[80px] ${statusFilter === "All" ? "border-[#C4909A]/40" : "border-[#2D1A1F]/5 hover:border-[#C4909A]/20"}`}
+          className={`shrink-0 rounded-2xl p-4 text-left shadow-sm border-2 transition-all min-w-[80px] ${statusFilter === "All" ? "border-[#C4909A] bg-[#C4909A]/8 shadow-md" : "bg-white border-transparent hover:border-[#C4909A]/30"}`}
         >
           <p className="text-3xl font-bold text-[#2D1A1F] leading-none">{contacts.length}</p>
           <div className="flex items-center gap-1.5 mt-2">
@@ -367,7 +367,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
           <button
             key={s}
             onClick={() => setStatusFilter(s)}
-            className={`shrink-0 bg-white rounded-2xl p-4 text-left shadow-sm border transition-colors min-w-[90px] ${statusFilter === s ? "border-[#C4909A]/40" : "border-[#2D1A1F]/5 hover:border-[#C4909A]/20"}`}
+            className={`shrink-0 rounded-2xl p-4 text-left shadow-sm border-2 transition-all min-w-[90px] ${statusFilter === s ? "border-[#C4909A] bg-[#C4909A]/8 shadow-md" : "bg-white border-transparent hover:border-[#C4909A]/30"}`}
           >
             <p className="text-3xl font-bold text-[#2D1A1F] leading-none">{statusCounts[s]}</p>
             <div className="flex items-center gap-1.5 mt-2">
@@ -390,9 +390,15 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                   : "bg-amber-50 text-amber-700 border-amber-200 hover:border-amber-400"
               }`}
             >
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              {overdueOnly ? (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
               Overdue ({overdueCount})
             </button>
           )}
@@ -405,9 +411,15 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                   : "bg-violet-50 text-violet-700 border-violet-200 hover:border-violet-400"
               }`}
             >
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
+              {followUpOnly ? (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              )}
               Needs follow up ({followUpCount})
             </button>
           )}
@@ -420,9 +432,15 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                   : "bg-teal-50 text-teal-700 border-teal-200 hover:border-teal-400"
               }`}
             >
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+              {faceToFaceOnly ? (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              )}
               Needs face to face ({faceToFaceCount})
             </button>
           )}
@@ -435,9 +453,15 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                   : "bg-green-50 text-green-700 border-green-200 hover:border-green-400"
               }`}
             >
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              {onSiteOnly ? (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
               On site ({onSiteCount})
             </button>
           )}
