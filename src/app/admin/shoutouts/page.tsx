@@ -6,15 +6,11 @@ import AdminShell from "../_components/AdminShell";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type ShoutoutStatus = "Planned" | "Done";
-
 type Shoutout = {
   id: string;
   instagramHandle?: string;
   businessName?: string;
-  date?: string;
-  status: ShoutoutStatus;
-  reciprocated: boolean;
+  lastShoutedAt?: string; // YYYY-MM-DD
   notes?: string;
 };
 
@@ -23,23 +19,15 @@ type ShoutoutRow = {
   instagram_handle: string | null;
   business_name: string | null;
   date: string | null;
-  status: string;
-  reciprocated: boolean | null;
   notes: string | null;
 };
 
-const ALL_STATUSES: ShoutoutStatus[] = ["Planned", "Done"];
-
-const STATUS_BADGE: Record<ShoutoutStatus, string> = {
-  Planned: "bg-amber-100 text-amber-700",
-  Done:    "bg-emerald-100 text-emerald-800",
-};
+type ContactOption = { id: string; instagramHandle?: string; businessName: string };
 
 const today = () => new Date().toISOString().split("T")[0];
 
 const EMPTY_FORM: Omit<Shoutout, "id"> = {
-  instagramHandle: "", businessName: "", date: today(),
-  status: "Planned", reciprocated: false, notes: "",
+  instagramHandle: "", businessName: "", lastShoutedAt: today(), notes: "",
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -49,15 +37,23 @@ function fromRow(r: ShoutoutRow): Shoutout {
     id:              r.id,
     instagramHandle: r.instagram_handle ?? undefined,
     businessName:    r.business_name    ?? undefined,
-    date:            r.date             ?? undefined,
-    status:          (r.status === "Done" ? "Done" : "Planned") as ShoutoutStatus,
-    reciprocated:    r.reciprocated     ?? false,
+    lastShoutedAt:   r.date             ?? undefined,
     notes:           r.notes            ?? undefined,
   };
 }
 
 function formatDate(iso: string): string {
   return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function daysSince(iso: string): number {
+  const ms = Date.now() - new Date(iso + "T00:00:00").getTime();
+  return Math.floor(ms / (1000 * 60 * 60 * 24));
+}
+
+function needsShoutout(s: Shoutout): boolean {
+  if (!s.lastShoutedAt) return true;
+  return daysSince(s.lastShoutedAt) >= 30;
 }
 
 async function authHeaders() {
@@ -70,9 +66,11 @@ async function authHeaders() {
 function ShoutoutCard({ s, onEdit, onDelete }: { s: Shoutout; onEdit: () => void; onDelete: () => void }) {
   const label = s.instagramHandle ? `@${s.instagramHandle}` : (s.businessName ?? "—");
   const initial = (s.instagramHandle ?? s.businessName ?? "?").charAt(0).toUpperCase();
+  const overdue = needsShoutout(s);
+  const days = s.lastShoutedAt ? daysSince(s.lastShoutedAt) : null;
 
   return (
-    <div className="bg-[#FFF5F0] rounded-2xl p-4 flex flex-col gap-3 border border-[#2D1A1F]/10 hover:border-[#C4909A]/40 transition-colors">
+    <div className={`bg-[#FFF5F0] rounded-2xl p-4 flex flex-col gap-3 border transition-colors ${overdue ? "border-amber-300/60 hover:border-amber-400/80" : "border-[#2D1A1F]/10 hover:border-[#C4909A]/40"}`}>
       <div className="flex items-start gap-3">
         <div className="w-10 h-10 rounded-full bg-[#F0D8DC] flex items-center justify-center shrink-0">
           <span className="text-sm font-bold text-[#A87580]">{initial}</span>
@@ -94,27 +92,23 @@ function ShoutoutCard({ s, onEdit, onDelete }: { s: Shoutout; onEdit: () => void
             <p className="text-xs text-[#9E7580] mt-0.5">{s.businessName}</p>
           )}
         </div>
-        <span className={`shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full ${STATUS_BADGE[s.status]}`}>
-          {s.status}
-        </span>
+        {overdue && (
+          <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700">
+            Due
+          </span>
+        )}
       </div>
-
-      {s.reciprocated && (
-        <span className="self-start text-xs font-medium px-2.5 py-1 rounded-full bg-pink-100 text-pink-700 flex items-center gap-1">
-          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-          </svg>
-          Reciprocated
-        </span>
-      )}
 
       {s.notes && <p className="text-sm text-[#6B4550] leading-snug line-clamp-2">{s.notes}</p>}
 
       <div className="border-t border-[#2D1A1F]/6 pt-3 flex items-center gap-3">
-        {s.date ? (
-          <span className="text-xs text-[#B09098]">{formatDate(s.date)}</span>
+        {s.lastShoutedAt ? (
+          <span className={`text-xs ${overdue ? "text-amber-600 font-medium" : "text-[#B09098]"}`}>
+            {overdue ? "⚠ " : ""}Last shouted {formatDate(s.lastShoutedAt)}
+            {days !== null && <span className="text-[#B09098] font-normal"> ({days}d ago)</span>}
+          </span>
         ) : (
-          <span className="text-xs text-[#B09098]">No date set</span>
+          <span className="text-xs text-amber-600 font-medium">⚠ Never shouted out</span>
         )}
         <button onClick={onEdit} className="text-sm font-medium text-[#2D1A1F] hover:text-[#C4909A] transition-colors ml-auto">Edit</button>
         <button onClick={onDelete} className="text-[#D8B4B8] hover:text-red-400 transition-colors">
@@ -127,10 +121,6 @@ function ShoutoutCard({ s, onEdit, onDelete }: { s: Shoutout; onEdit: () => void
   );
 }
 
-// ─── Types (contact picker) ───────────────────────────────────────────────────
-
-type ContactOption = { id: string; instagramHandle?: string; businessName: string };
-
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) {
@@ -138,8 +128,7 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
   const [contacts, setContacts] = useState<ContactOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<ShoutoutStatus | "All">("All");
-  const [reciprocatedOnly, setReciprocatedOnly] = useState(false);
+  const [dueOnly, setDueOnly] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [editing, setEditing] = useState<Shoutout | null>(null);
   const [form, setForm] = useState<Omit<Shoutout, "id">>(EMPTY_FORM);
@@ -166,10 +155,10 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
   useEffect(() => { load(); }, []);
   useEffect(() => { onOpenAdd(openAdd); }, []);
 
-  function openAdd() { setEditing(null); setForm({ ...EMPTY_FORM, date: today() }); setContactSearch(""); setPanelOpen(true); }
+  function openAdd() { setEditing(null); setForm({ ...EMPTY_FORM, lastShoutedAt: today() }); setContactSearch(""); setPanelOpen(true); }
   function openEdit(s: Shoutout) {
     setEditing(s);
-    setForm({ instagramHandle: s.instagramHandle, businessName: s.businessName, date: s.date ?? today(), status: s.status, reciprocated: s.reciprocated, notes: s.notes });
+    setForm({ instagramHandle: s.instagramHandle, businessName: s.businessName, lastShoutedAt: s.lastShoutedAt ?? today(), notes: s.notes });
     setContactSearch("");
     setPanelOpen(true);
   }
@@ -184,18 +173,19 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
     if (!form.instagramHandle?.trim() && !form.businessName?.trim()) return;
     setSaving(true);
     const headers = { ...(await authHeaders()), "Content-Type": "application/json" };
+    const body = { instagramHandle: form.instagramHandle, businessName: form.businessName, date: form.lastShoutedAt, notes: form.notes };
 
     if (editing) {
-      const res = await fetch(`/api/admin/shoutouts/${editing.id}`, { method: "PATCH", headers, body: JSON.stringify(form) });
+      const res = await fetch(`/api/admin/shoutouts/${editing.id}`, { method: "PATCH", headers, body: JSON.stringify(body) });
       if (res.ok) {
         const updated: ShoutoutRow = await res.json();
         setShoutouts((prev) => prev.map((s) => s.id === editing.id ? fromRow(updated) : s));
       }
     } else {
-      const res = await fetch("/api/admin/shoutouts", { method: "POST", headers, body: JSON.stringify(form) });
+      const res = await fetch("/api/admin/shoutouts", { method: "POST", headers, body: JSON.stringify(body) });
       if (res.ok) {
         const created: ShoutoutRow = await res.json();
-        setShoutouts((prev) => [fromRow(created), ...prev]);
+        setShoutouts((prev) => [...prev, fromRow(created)]);
       }
     }
     setSaving(false);
@@ -209,22 +199,25 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
     setShoutouts((prev) => prev.filter((s) => s.id !== id));
   }
 
-  const reciprocatedCount = shoutouts.filter((s) => s.reciprocated).length;
+  const dueCount = shoutouts.filter(needsShoutout).length;
 
-  const filtered = shoutouts.filter((s) => {
-    const matchesStatus = statusFilter === "All" || s.status === statusFilter;
-    const matchesRecip = !reciprocatedOnly || s.reciprocated;
+  // Sort oldest first so the ones needing rotation are at the top
+  const sorted = [...shoutouts].sort((a, b) => {
+    if (!a.lastShoutedAt && !b.lastShoutedAt) return 0;
+    if (!a.lastShoutedAt) return -1;
+    if (!b.lastShoutedAt) return 1;
+    return a.lastShoutedAt < b.lastShoutedAt ? -1 : 1;
+  });
+
+  const filtered = sorted.filter((s) => {
+    const matchesDue = !dueOnly || needsShoutout(s);
     const q = query.toLowerCase();
     const matchesQuery = !q ||
       (s.instagramHandle ?? "").toLowerCase().includes(q) ||
       (s.businessName ?? "").toLowerCase().includes(q) ||
       (s.notes ?? "").toLowerCase().includes(q);
-    return matchesStatus && matchesRecip && matchesQuery;
+    return matchesDue && matchesQuery;
   });
-
-  const statusCounts = Object.fromEntries(
-    ALL_STATUSES.map((st) => [st, shoutouts.filter((s) => s.status === st).length])
-  ) as Record<ShoutoutStatus, number>;
 
   const inputCls = "text-base bg-[#FAF7F5] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#C0A8AF] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 w-full";
   const labelCls = "flex flex-col gap-2";
@@ -248,45 +241,40 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
 
       {/* Stat cards */}
       <div className="flex gap-3 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <button
-          onClick={() => setStatusFilter("All")}
-          className={`shrink-0 rounded-2xl p-4 text-left shadow-sm border-2 transition-all min-w-[80px] ${statusFilter === "All" ? "border-[#C4909A] bg-[#C4909A]/8 shadow-md" : "bg-white border-transparent hover:border-[#C4909A]/30"}`}
-        >
+        <div className="shrink-0 bg-white rounded-2xl p-4 shadow-sm border border-[#2D1A1F]/5 min-w-[80px]">
           <p className="text-3xl font-bold text-[#2D1A1F] leading-none">{shoutouts.length}</p>
-          <p className="text-xs text-[#9E7580] mt-2">All</p>
-        </button>
-        {ALL_STATUSES.map((st) => (
-          <button
-            key={st}
-            onClick={() => setStatusFilter(st)}
-            className={`shrink-0 rounded-2xl p-4 text-left shadow-sm border-2 transition-all min-w-[90px] ${statusFilter === st ? "border-[#C4909A] bg-[#C4909A]/8 shadow-md" : "bg-white border-transparent hover:border-[#C4909A]/30"}`}
-          >
-            <p className="text-3xl font-bold text-[#2D1A1F] leading-none">{statusCounts[st]}</p>
-            <p className="text-xs text-[#9E7580] mt-2">{st}</p>
-          </button>
-        ))}
+          <p className="text-xs text-[#9E7580] mt-2">Total</p>
+        </div>
+        <div className="shrink-0 bg-white rounded-2xl p-4 shadow-sm border border-[#2D1A1F]/5 min-w-[90px]">
+          <p className="text-3xl font-bold text-amber-500 leading-none">{dueCount}</p>
+          <p className="text-xs text-[#9E7580] mt-2">Due</p>
+        </div>
+        <div className="shrink-0 bg-white rounded-2xl p-4 shadow-sm border border-[#2D1A1F]/5 min-w-[90px]">
+          <p className="text-3xl font-bold text-emerald-600 leading-none">{shoutouts.length - dueCount}</p>
+          <p className="text-xs text-[#9E7580] mt-2">Up to date</p>
+        </div>
       </div>
 
-      {/* Reciprocated filter */}
-      {reciprocatedCount > 0 && (
+      {/* Due filter */}
+      {dueCount > 0 && (
         <button
-          onClick={() => setReciprocatedOnly((v) => !v)}
+          onClick={() => setDueOnly((v) => !v)}
           className={`self-start flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
-            reciprocatedOnly
-              ? "bg-pink-500 text-white border-pink-500"
-              : "bg-pink-50 text-pink-700 border-pink-200 hover:border-pink-400"
+            dueOnly
+              ? "bg-amber-500 text-white border-amber-500"
+              : "bg-amber-50 text-amber-700 border-amber-200 hover:border-amber-400"
           }`}
         >
-          {reciprocatedOnly ? (
+          {dueOnly ? (
             <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
           ) : (
-            <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           )}
-          Reciprocated ({reciprocatedCount})
+          Due for shoutout ({dueCount})
         </button>
       )}
 
@@ -294,10 +282,10 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
         <p className="text-sm text-[#B09098] text-center py-12">Loading…</p>
       ) : (
         <>
-          <p className="text-sm text-[#9E7580]">{filtered.length} shoutout{filtered.length !== 1 ? "s" : ""}</p>
+          <p className="text-sm text-[#9E7580]">{filtered.length} provider{filtered.length !== 1 ? "s" : ""}</p>
           {filtered.length === 0 ? (
             <p className="text-sm text-[#B09098] text-center py-12">
-              {shoutouts.length === 0 ? "No shoutouts yet — add one." : "No shoutouts match your filter."}
+              {shoutouts.length === 0 ? "No shoutouts tracked yet — add one." : "No providers match your filter."}
             </p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -375,7 +363,6 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
                       <p className="text-xs text-[#B09098] px-1">No contacts match — fill in manually below.</p>
                     );
                   })()}
-                  {/* Selected contact chip */}
                   {!contactSearch && (form.instagramHandle || form.businessName) && (
                     <div className="flex items-center gap-2 px-3 py-2 bg-[#C4909A]/10 rounded-xl">
                       <span className="text-sm text-[#6B4550] flex-1 truncate">
@@ -400,27 +387,6 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
                   </div>
                 </div>
               )}
-
-              {/* Status */}
-              <div className={labelCls}>
-                <span className={labelTextCls}>Status</span>
-                <div className="flex gap-2">
-                  {ALL_STATUSES.map((st) => (
-                    <button
-                      key={st}
-                      type="button"
-                      onClick={() => setForm((f) => ({ ...f, status: st }))}
-                      className={`flex-1 py-2 rounded-full text-sm font-medium border transition-colors ${
-                        form.status === st
-                          ? "bg-[#C4909A] text-white border-[#C4909A]"
-                          : "bg-[#FAF7F5] text-[#6B4550] border-[#2D1A1F]/10 hover:border-[#C4909A]/40"
-                      }`}
-                    >
-                      {st}
-                    </button>
-                  ))}
-                </div>
-              </div>
 
               {/* Instagram handle */}
               <label className={labelCls}>
@@ -451,40 +417,21 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
                 <input value={form.businessName ?? ""} onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))} placeholder="e.g. Nails by Sophie" className={inputCls} />
               </label>
 
-              {/* Date */}
+              {/* Last shouted out date */}
               <label className={labelCls}>
-                <span className={labelTextCls}>Date</span>
+                <span className={labelTextCls}>Last shouted out</span>
                 <input
                   type="date"
-                  value={form.date ?? ""}
-                  onChange={(e) => setForm((f) => ({ ...f, date: e.target.value || undefined }))}
+                  value={form.lastShoutedAt ?? ""}
+                  onChange={(e) => setForm((f) => ({ ...f, lastShoutedAt: e.target.value || undefined }))}
                   className={inputCls}
                 />
               </label>
 
-              {/* Reciprocated toggle */}
-              <div className={labelCls}>
-                <span className={labelTextCls}>Reciprocated?</span>
-                <button
-                  type="button"
-                  onClick={() => setForm((f) => ({ ...f, reciprocated: !f.reciprocated }))}
-                  className={`self-start flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
-                    form.reciprocated
-                      ? "bg-pink-500 text-white border-pink-500"
-                      : "bg-[#FAF7F5] text-[#6B4550] border-[#2D1A1F]/10 hover:border-pink-300"
-                  }`}
-                >
-                  <svg className="w-4 h-4 shrink-0" fill={form.reciprocated ? "white" : "#C0A8AF"} viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
-                  {form.reciprocated ? "Yes — they shouted us back" : "No — not yet"}
-                </button>
-              </div>
-
               {/* Notes */}
               <label className={labelCls}>
                 <span className={labelTextCls}>Notes</span>
-                <textarea value={form.notes ?? ""} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} placeholder="Any notes about this shoutout…" rows={4} className={`${inputCls} resize-none`} />
+                <textarea value={form.notes ?? ""} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} placeholder="Any notes about this provider…" rows={4} className={`${inputCls} resize-none`} />
               </label>
             </div>
 

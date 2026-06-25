@@ -40,8 +40,6 @@ function toRow(b: Record<string, unknown>) {
     instagram_handle: b.instagramHandle ?? null,
     business_name:    b.businessName   ?? null,
     date:             b.date           || null,
-    status:           b.status         ?? "Planned",
-    reciprocated:     b.reciprocated   ?? false,
     notes:            b.notes          ?? null,
   };
 }

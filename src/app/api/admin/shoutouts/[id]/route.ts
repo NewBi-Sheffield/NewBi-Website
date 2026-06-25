@@ -22,8 +22,6 @@ export async function PATCH(req: NextRequest, { params }: Props) {
       instagram_handle: body.instagramHandle ?? null,
       business_name:    body.businessName   ?? null,
       date:             body.date           || null,
-      status:           body.status,
-      reciprocated:     body.reciprocated   ?? false,
       notes:            body.notes          ?? null,
     })
     .eq("id", id)
