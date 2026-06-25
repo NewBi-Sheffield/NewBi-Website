@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, KeyboardEvent } from "react";
+import { useState, useRef, useEffect, KeyboardEvent, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
@@ -509,7 +509,7 @@ function ProviderCheckEmailScreen({ email }: { email: string }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function SignupPage() {
+function SignupPageInner() {
   const { loading: authLoading, isLoggedIn, signup } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -613,5 +613,13 @@ export default function SignupPage() {
         </Link>
       )}
     </main>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense>
+      <SignupPageInner />
+    </Suspense>
   );
 }
