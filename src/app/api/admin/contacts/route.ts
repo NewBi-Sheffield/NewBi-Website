@@ -42,17 +42,19 @@ export async function POST(req: NextRequest) {
 
 function toRow(c: Record<string, unknown>) {
   return {
-    status:           c.status           ?? "To contact",
-    business_name:    c.businessName     ?? c.business_name ?? "",
-    instagram_handle: c.instagramHandle  ?? c.instagram_handle ?? null,
-    category:         c.category         ?? "",
-    city:             c.city             ?? "",
-    followers:        c.followers        != null ? Number(c.followers) || null : null,
-    booking_method:   c.bookingMethod    ?? c.booking_method ?? null,
-    email:            c.email            ?? null,
-    notes:            c.notes            ?? null,
-    phone:            c.phone            ?? null,
-    website:          c.website          ?? null,
-    contacted_at:     (c.contactedAt ?? c.contacted_at) || null,
+    status:             c.status           ?? "To contact",
+    business_name:      c.businessName     ?? c.business_name ?? "",
+    instagram_handle:   c.instagramHandle  ?? c.instagram_handle ?? null,
+    category:           c.category         ?? "",
+    city:               c.city             ?? "",
+    followers:          c.followers        != null ? Number(c.followers) || null : null,
+    booking_method:     c.bookingMethod    ?? c.booking_method ?? null,
+    email:              c.email            ?? null,
+    notes:              c.notes            ?? null,
+    phone:              c.phone            ?? null,
+    website:            c.website          ?? null,
+    contacted_at:       (c.contactedAt ?? c.contacted_at) || null,
+    needs_follow_up:    c.needsFollowUp    ?? c.needs_follow_up ?? false,
+    needs_face_to_face: c.needsFaceToFace  ?? c.needs_face_to_face ?? false,
   };
 }

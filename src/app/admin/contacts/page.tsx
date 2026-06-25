@@ -22,6 +22,8 @@ type Contact = {
   phone?: string;
   website?: string;
   contactedAt?: string; // YYYY-MM-DD
+  needsFollowUp?: boolean;
+  needsFaceToFace?: boolean;
 };
 
 type ContactRow = {
@@ -38,6 +40,8 @@ type ContactRow = {
   phone: string | null;
   website: string | null;
   contacted_at: string | null;
+  needs_follow_up: boolean | null;
+  needs_face_to_face: boolean | null;
 };
 
 const ALL_STATUSES: ContactStatus[] = ["To contact", "Not responded", "Responded", "Live"];
@@ -63,7 +67,7 @@ const today = () => new Date().toISOString().split("T")[0];
 const EMPTY_FORM: Omit<Contact, "id"> = {
   status: "To contact", businessName: "", instagramHandle: "", category: "",
   city: "", followers: undefined, bookingMethod: "", email: "", notes: "", phone: "", website: "",
-  contactedAt: today(),
+  contactedAt: today(), needsFollowUp: false, needsFaceToFace: false,
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -83,6 +87,8 @@ function fromRow(r: ContactRow): Contact {
     phone:           r.phone ?? undefined,
     website:         r.website ?? undefined,
     contactedAt:     r.contacted_at ?? undefined,
+    needsFollowUp:   r.needs_follow_up ?? false,
+    needsFaceToFace: r.needs_face_to_face ?? false,
   };
 }
 
@@ -104,7 +110,7 @@ async function authHeaders() {
 
 // ─── Contact card ─────────────────────────────────────────────────────────────
 
-function ContactCard({ c, onEdit, onDelete }: { c: Contact; onEdit: () => void; onDelete: () => void }) {
+function ContactCard({ c, isOnSite, onEdit, onDelete }: { c: Contact; isOnSite: boolean; onEdit: () => void; onDelete: () => void }) {
   const initial = (c.instagramHandle ?? c.businessName).charAt(0).toUpperCase();
   const websiteLabel = c.website ? c.website.replace(/^https?:\/\//, "").split("/")[0] : null;
 
@@ -131,16 +137,35 @@ function ContactCard({ c, onEdit, onDelete }: { c: Contact; onEdit: () => void; 
             <p className="text-xs text-[#9E7580] mt-0.5">{c.businessName}</p>
           )}
         </div>
-        <span className={`shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full ${STATUS_BADGE[c.status]}`}>
-          {c.status}
-        </span>
+        <div className="flex flex-col items-end gap-1 shrink-0">
+          <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full ${STATUS_BADGE[c.status]}`}>
+            {c.status}
+          </span>
+          {isOnSite && (
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700">
+              On site
+            </span>
+          )}
+        </div>
       </div>
 
-      {c.category && (
-        <span className="self-start text-xs font-medium px-2.5 py-1 rounded-full bg-[#C4909A]/10 text-[#A87580]">
-          {c.category}
-        </span>
-      )}
+      <div className="flex flex-wrap gap-1.5">
+        {c.category && (
+          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-[#C4909A]/10 text-[#A87580]">
+            {c.category}
+          </span>
+        )}
+        {c.needsFollowUp && (
+          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-violet-100 text-violet-700">
+            Needs follow up
+          </span>
+        )}
+        {c.needsFaceToFace && (
+          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-teal-100 text-teal-700">
+            Needs face to face
+          </span>
+        )}
+      </div>
       {c.notes && <p className="text-sm text-[#6B4550] leading-snug line-clamp-2">{c.notes}</p>}
 
       <div className="border-t border-[#2D1A1F]/6 pt-3 flex items-center gap-3 flex-wrap">
@@ -189,13 +214,29 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
   const [form, setForm] = useState<Omit<Contact, "id">>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [overdueOnly, setOverdueOnly] = useState(false);
+  const [followUpOnly, setFollowUpOnly] = useState(false);
+  const [faceToFaceOnly, setFaceToFaceOnly] = useState(false);
+  const [onSiteOnly, setOnSiteOnly] = useState(false);
+  const [liveHandles, setLiveHandles] = useState<Set<string>>(new Set());
 
   async function load() {
     const headers = await authHeaders();
-    const res = await fetch("/api/admin/contacts", { headers });
-    if (res.ok) {
-      const rows: ContactRow[] = await res.json();
+    const [contactsRes, providersRes] = await Promise.all([
+      fetch("/api/admin/contacts", { headers }),
+      fetch("/api/admin/providers", { headers }),
+    ]);
+    if (contactsRes.ok) {
+      const rows: ContactRow[] = await contactsRes.json();
       setContacts(rows.map(fromRow));
+    }
+    if (providersRes.ok) {
+      const providers: { instagram: string | null; status: string }[] = await providersRes.json();
+      const handles = new Set(
+        providers
+          .filter((p) => p.status === "approved" && p.instagram)
+          .map((p) => p.instagram!.replace(/^@/, "").toLowerCase())
+      );
+      setLiveHandles(handles);
     }
     setLoading(false);
   }
@@ -227,7 +268,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
   function openAdd() { setEditing(null); setForm({ ...EMPTY_FORM, contactedAt: today() }); setPanelOpen(true); }
   function openEdit(c: Contact) {
     setEditing(c);
-    setForm({ status: c.status, businessName: c.businessName, instagramHandle: c.instagramHandle, category: c.category, city: c.city, followers: c.followers, bookingMethod: c.bookingMethod, email: c.email, notes: c.notes, phone: c.phone, website: c.website, contactedAt: c.contactedAt ?? today() });
+    setForm({ status: c.status, businessName: c.businessName, instagramHandle: c.instagramHandle, category: c.category, city: c.city, followers: c.followers, bookingMethod: c.bookingMethod, email: c.email, notes: c.notes, phone: c.phone, website: c.website, contactedAt: c.contactedAt ?? today(), needsFollowUp: c.needsFollowUp ?? false, needsFaceToFace: c.needsFaceToFace ?? false });
     setPanelOpen(true);
   }
   function closePanel() { setPanelOpen(false); setEditing(null); }
@@ -261,18 +302,27 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
     setContacts((prev) => prev.filter((c) => c.id !== id));
   }
 
+  const isOnSite = (c: Contact) =>
+    !!c.instagramHandle && liveHandles.has(c.instagramHandle.toLowerCase());
+
   const overdueCount = contacts.filter((c) => isOverdue(c.contactedAt)).length;
+  const followUpCount = contacts.filter((c) => c.needsFollowUp).length;
+  const faceToFaceCount = contacts.filter((c) => c.needsFaceToFace).length;
+  const onSiteCount = contacts.filter(isOnSite).length;
 
   const filtered = contacts.filter((c) => {
     const matchesStatus = statusFilter === "All" || c.status === statusFilter;
     const matchesOverdue = !overdueOnly || isOverdue(c.contactedAt);
+    const matchesFollowUp = !followUpOnly || !!c.needsFollowUp;
+    const matchesFaceToFace = !faceToFaceOnly || !!c.needsFaceToFace;
+    const matchesOnSite = !onSiteOnly || isOnSite(c);
     const q = query.toLowerCase();
     const matchesQuery = !q ||
       c.businessName.toLowerCase().includes(q) ||
       (c.instagramHandle ?? "").toLowerCase().includes(q) ||
       c.category.toLowerCase().includes(q) ||
       (c.notes ?? "").toLowerCase().includes(q);
-    return matchesStatus && matchesOverdue && matchesQuery;
+    return matchesStatus && matchesOverdue && matchesFollowUp && matchesFaceToFace && matchesOnSite && matchesQuery;
   });
 
   const statusCounts = Object.fromEntries(
@@ -328,21 +378,70 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
         ))}
       </div>
 
-      {/* Follow-up filter */}
-      {overdueCount > 0 && (
-        <button
-          onClick={() => setOverdueOnly((v) => !v)}
-          className={`self-start flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
-            overdueOnly
-              ? "bg-amber-500 text-white border-amber-500"
-              : "bg-amber-50 text-amber-700 border-amber-200 hover:border-amber-400"
-          }`}
-        >
-          <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Needs follow-up ({overdueCount})
-        </button>
+      {/* Category filters */}
+      {(overdueCount > 0 || followUpCount > 0 || faceToFaceCount > 0 || onSiteCount > 0) && (
+        <div className="flex flex-wrap gap-2">
+          {overdueCount > 0 && (
+            <button
+              onClick={() => setOverdueOnly((v) => !v)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
+                overdueOnly
+                  ? "bg-amber-500 text-white border-amber-500"
+                  : "bg-amber-50 text-amber-700 border-amber-200 hover:border-amber-400"
+              }`}
+            >
+              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Overdue ({overdueCount})
+            </button>
+          )}
+          {followUpCount > 0 && (
+            <button
+              onClick={() => setFollowUpOnly((v) => !v)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
+                followUpOnly
+                  ? "bg-violet-500 text-white border-violet-500"
+                  : "bg-violet-50 text-violet-700 border-violet-200 hover:border-violet-400"
+              }`}
+            >
+              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              Needs follow up ({followUpCount})
+            </button>
+          )}
+          {faceToFaceCount > 0 && (
+            <button
+              onClick={() => setFaceToFaceOnly((v) => !v)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
+                faceToFaceOnly
+                  ? "bg-teal-500 text-white border-teal-500"
+                  : "bg-teal-50 text-teal-700 border-teal-200 hover:border-teal-400"
+              }`}
+            >
+              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Needs face to face ({faceToFaceCount})
+            </button>
+          )}
+          {onSiteCount > 0 && (
+            <button
+              onClick={() => setOnSiteOnly((v) => !v)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
+                onSiteOnly
+                  ? "bg-green-500 text-white border-green-500"
+                  : "bg-green-50 text-green-700 border-green-200 hover:border-green-400"
+              }`}
+            >
+              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              On site ({onSiteCount})
+            </button>
+          )}
+        </div>
       )}
 
       {loading ? (
@@ -358,7 +457,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {filtered.map((c) => (
-                <ContactCard key={c.id} c={c} onEdit={() => openEdit(c)} onDelete={() => deleteContact(c.id)} />
+                <ContactCard key={c.id} c={c} isOnSite={isOnSite(c)} onEdit={() => openEdit(c)} onDelete={() => deleteContact(c.id)} />
               ))}
             </div>
           )}
@@ -448,6 +547,33 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                       {cat}
                     </button>
                   ))}
+                </div>
+              </div>
+              <div className={labelCls}>
+                <span className={labelTextCls}>Categories</span>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, needsFollowUp: !f.needsFollowUp }))}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium border transition-colors ${
+                      form.needsFollowUp
+                        ? "bg-violet-500 text-white border-violet-500"
+                        : "bg-[#FAF7F5] text-[#6B4550] border-[#2D1A1F]/10 hover:border-violet-300"
+                    }`}
+                  >
+                    Needs follow up
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, needsFaceToFace: !f.needsFaceToFace }))}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium border transition-colors ${
+                      form.needsFaceToFace
+                        ? "bg-teal-500 text-white border-teal-500"
+                        : "bg-[#FAF7F5] text-[#6B4550] border-[#2D1A1F]/10 hover:border-teal-300"
+                    }`}
+                  >
+                    Needs face to face
+                  </button>
                 </div>
               </div>
               <label className={labelCls}>

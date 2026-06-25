@@ -19,18 +19,20 @@ export async function PATCH(req: NextRequest, { params }: Props) {
   const { data, error } = await adminSupabase
     .from("contacts")
     .update({
-      status:           body.status,
-      business_name:    body.businessName,
-      instagram_handle: body.instagramHandle ?? null,
-      category:         body.category,
-      city:             body.city,
-      followers:        body.followers != null ? Number(body.followers) || null : null,
-      booking_method:   body.bookingMethod ?? null,
-      email:            body.email ?? null,
-      notes:            body.notes ?? null,
-      phone:            body.phone ?? null,
-      website:          body.website ?? null,
-      contacted_at:     body.contactedAt || null,
+      status:             body.status,
+      business_name:      body.businessName,
+      instagram_handle:   body.instagramHandle ?? null,
+      category:           body.category,
+      city:               body.city,
+      followers:          body.followers != null ? Number(body.followers) || null : null,
+      booking_method:     body.bookingMethod ?? null,
+      email:              body.email ?? null,
+      notes:              body.notes ?? null,
+      phone:              body.phone ?? null,
+      website:            body.website ?? null,
+      contacted_at:       body.contactedAt || null,
+      needs_follow_up:    body.needsFollowUp ?? false,
+      needs_face_to_face: body.needsFaceToFace ?? false,
     })
     .eq("id", id)
     .select()
