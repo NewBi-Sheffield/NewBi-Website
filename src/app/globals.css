@@ -10,6 +10,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand-rose: var(--brand-rose);
+  --color-brand-rose-deep: var(--brand-rose-deep);
   --font-sans: Calibri, 'Gill Sans', 'Gill Sans MT', sans-serif;
   --font-faunces: 'Faunces', Georgia, serif;
   --font-mono: var(--font-geist-mono);

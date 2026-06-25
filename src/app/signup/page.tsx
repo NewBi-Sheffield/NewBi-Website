@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 
 const inputClass =
@@ -512,9 +512,11 @@ function ProviderCheckEmailScreen({ email }: { email: string }) {
 export default function SignupPage() {
   const { loading: authLoading, isLoggedIn, signup } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [step, setStep] = useState<Step>("choose");
-  const [type, setType] = useState<SignupType | null>(null);
+  const preselectedType = searchParams.get("type") === "provider" ? "provider" : null;
+  const [step, setStep] = useState<Step>(preselectedType ? "account" : "choose");
+  const [type, setType] = useState<SignupType | null>(preselectedType);
   const [account, setAccount] = useState<AccountData | null>(null);
   const [successEmail, setSuccessEmail] = useState("");
 
