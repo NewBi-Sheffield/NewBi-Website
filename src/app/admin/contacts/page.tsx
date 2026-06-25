@@ -72,6 +72,12 @@ const EMPTY_FORM: Omit<Contact, "id"> = {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+function normalizeHandle(value: string): string {
+  const match = value.match(/instagram\.com\/([a-zA-Z0-9_.]+)/);
+  if (match) return match[1].toLowerCase();
+  return value.replace(/^@/, "").split("?")[0].split("/")[0].trim().toLowerCase();
+}
+
 function fromRow(r: ContactRow): Contact {
   return {
     id:              r.id,
@@ -234,7 +240,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
       const handles = new Set(
         providers
           .filter((p) => p.status === "approved" && p.instagram)
-          .map((p) => p.instagram!.replace(/^@/, "").toLowerCase())
+          .map((p) => normalizeHandle(p.instagram!))
       );
       setLiveHandles(handles);
     }
@@ -303,7 +309,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
   }
 
   const isOnSite = (c: Contact) =>
-    !!c.instagramHandle && liveHandles.has(c.instagramHandle.toLowerCase());
+    !!c.instagramHandle && liveHandles.has(normalizeHandle(c.instagramHandle));
 
   const overdueCount = contacts.filter((c) => isOverdue(c.contactedAt)).length;
   const followUpCount = contacts.filter((c) => c.needsFollowUp).length;
