@@ -56,5 +56,6 @@ function toRow(c: Record<string, unknown>) {
     contacted_at:       (c.contactedAt ?? c.contacted_at) || null,
     needs_follow_up:    c.needsFollowUp    ?? c.needs_follow_up ?? false,
     needs_face_to_face: c.needsFaceToFace  ?? c.needs_face_to_face ?? false,
+    due_for_shoutout:   c.dueForShoutout   ?? c.due_for_shoutout ?? false,
   };
 }

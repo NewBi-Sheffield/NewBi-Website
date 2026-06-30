@@ -24,6 +24,7 @@ type Contact = {
   contactedAt?: string; // YYYY-MM-DD
   needsFollowUp?: boolean;
   needsFaceToFace?: boolean;
+  dueForShoutout?: boolean;
 };
 
 type ContactRow = {
@@ -42,6 +43,7 @@ type ContactRow = {
   contacted_at: string | null;
   needs_follow_up: boolean | null;
   needs_face_to_face: boolean | null;
+  due_for_shoutout: boolean | null;
 };
 
 const ALL_STATUSES: ContactStatus[] = ["To contact", "Not responded", "Responded", "Live"];
@@ -67,7 +69,7 @@ const today = () => new Date().toISOString().split("T")[0];
 const EMPTY_FORM: Omit<Contact, "id"> = {
   status: "To contact", businessName: "", instagramHandle: "", category: "",
   city: "", followers: undefined, bookingMethod: "", email: "", notes: "", phone: "", website: "",
-  contactedAt: today(), needsFollowUp: false, needsFaceToFace: false,
+  contactedAt: today(), needsFollowUp: false, needsFaceToFace: false, dueForShoutout: false,
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -94,7 +96,8 @@ function fromRow(r: ContactRow): Contact {
     website:         r.website ?? undefined,
     contactedAt:     r.contacted_at ?? undefined,
     needsFollowUp:   r.needs_follow_up ?? false,
-    needsFaceToFace: r.needs_face_to_face ?? false,
+    needsFaceToFace:  r.needs_face_to_face  ?? false,
+    dueForShoutout:   r.due_for_shoutout   ?? false,
   };
 }
 
@@ -171,6 +174,14 @@ function ContactCard({ c, isOnSite, onEdit, onDelete }: { c: Contact; isOnSite: 
             Needs face to face
           </span>
         )}
+        {c.dueForShoutout && (
+          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 flex items-center gap-1">
+            <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            </svg>
+            Due for shoutout
+          </span>
+        )}
       </div>
       {c.notes && <p className="text-sm text-[#6B4550] leading-snug line-clamp-2">{c.notes}</p>}
 
@@ -222,6 +233,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
   const [overdueOnly, setOverdueOnly] = useState(false);
   const [followUpOnly, setFollowUpOnly] = useState(false);
   const [faceToFaceOnly, setFaceToFaceOnly] = useState(false);
+  const [dueForShoutoutOnly, setDueForShoutoutOnly] = useState(false);
   const [onSiteOnly, setOnSiteOnly] = useState(false);
   const [liveHandles, setLiveHandles] = useState<Set<string>>(new Set());
 
@@ -274,7 +286,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
   function openAdd() { setEditing(null); setForm({ ...EMPTY_FORM, contactedAt: today() }); setPanelOpen(true); }
   function openEdit(c: Contact) {
     setEditing(c);
-    setForm({ status: c.status, businessName: c.businessName, instagramHandle: c.instagramHandle, category: c.category, city: c.city, followers: c.followers, bookingMethod: c.bookingMethod, email: c.email, notes: c.notes, phone: c.phone, website: c.website, contactedAt: c.contactedAt ?? today(), needsFollowUp: c.needsFollowUp ?? false, needsFaceToFace: c.needsFaceToFace ?? false });
+    setForm({ status: c.status, businessName: c.businessName, instagramHandle: c.instagramHandle, category: c.category, city: c.city, followers: c.followers, bookingMethod: c.bookingMethod, email: c.email, notes: c.notes, phone: c.phone, website: c.website, contactedAt: c.contactedAt ?? today(), needsFollowUp: c.needsFollowUp ?? false, needsFaceToFace: c.needsFaceToFace ?? false, dueForShoutout: c.dueForShoutout ?? false });
     setPanelOpen(true);
   }
   function closePanel() { setPanelOpen(false); setEditing(null); }
@@ -314,6 +326,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
   const overdueCount = contacts.filter((c) => isOverdue(c.contactedAt)).length;
   const followUpCount = contacts.filter((c) => c.needsFollowUp).length;
   const faceToFaceCount = contacts.filter((c) => c.needsFaceToFace).length;
+  const dueForShoutoutCount = contacts.filter((c) => c.dueForShoutout).length;
   const onSiteCount = contacts.filter(isOnSite).length;
 
   const filtered = contacts.filter((c) => {
@@ -321,6 +334,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
     const matchesOverdue = !overdueOnly || isOverdue(c.contactedAt);
     const matchesFollowUp = !followUpOnly || !!c.needsFollowUp;
     const matchesFaceToFace = !faceToFaceOnly || !!c.needsFaceToFace;
+    const matchesDueForShoutout = !dueForShoutoutOnly || !!c.dueForShoutout;
     const matchesOnSite = !onSiteOnly || isOnSite(c);
     const q = query.toLowerCase();
     const matchesQuery = !q ||
@@ -328,7 +342,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
       (c.instagramHandle ?? "").toLowerCase().includes(q) ||
       c.category.toLowerCase().includes(q) ||
       (c.notes ?? "").toLowerCase().includes(q);
-    return matchesStatus && matchesOverdue && matchesFollowUp && matchesFaceToFace && matchesOnSite && matchesQuery;
+    return matchesStatus && matchesOverdue && matchesFollowUp && matchesFaceToFace && matchesDueForShoutout && matchesOnSite && matchesQuery;
   });
 
   const statusCounts = Object.fromEntries(
@@ -385,7 +399,7 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
       </div>
 
       {/* Category filters */}
-      {(overdueCount > 0 || followUpCount > 0 || faceToFaceCount > 0 || onSiteCount > 0) && (
+      {(overdueCount > 0 || followUpCount > 0 || faceToFaceCount > 0 || dueForShoutoutCount > 0 || onSiteCount > 0) && (
         <div className="flex flex-wrap gap-2">
           {overdueCount > 0 && (
             <button
@@ -448,6 +462,27 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                 </svg>
               )}
               Needs face to face ({faceToFaceCount})
+            </button>
+          )}
+          {dueForShoutoutCount > 0 && (
+            <button
+              onClick={() => setDueForShoutoutOnly((v) => !v)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
+                dueForShoutoutOnly
+                  ? "bg-orange-500 text-white border-orange-500"
+                  : "bg-orange-50 text-orange-700 border-orange-200 hover:border-orange-400"
+              }`}
+            >
+              {dueForShoutoutOnly ? (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                </svg>
+              )}
+              Due for shoutout ({dueForShoutoutCount})
             </button>
           )}
           {onSiteCount > 0 && (
@@ -603,6 +638,17 @@ function ContactsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void }) 
                     }`}
                   >
                     Needs face to face
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, dueForShoutout: !f.dueForShoutout }))}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium border transition-colors ${
+                      form.dueForShoutout
+                        ? "bg-orange-500 text-white border-orange-500"
+                        : "bg-[#FAF7F5] text-[#6B4550] border-[#2D1A1F]/10 hover:border-orange-300"
+                    }`}
+                  >
+                    Due for shoutout
                   </button>
                 </div>
               </div>

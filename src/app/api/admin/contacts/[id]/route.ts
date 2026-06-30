@@ -31,8 +31,9 @@ export async function PATCH(req: NextRequest, { params }: Props) {
       phone:              body.phone ?? null,
       website:            body.website ?? null,
       contacted_at:       body.contactedAt || null,
-      needs_follow_up:    body.needsFollowUp ?? false,
-      needs_face_to_face: body.needsFaceToFace ?? false,
+      needs_follow_up:    body.needsFollowUp    ?? false,
+      needs_face_to_face: body.needsFaceToFace  ?? false,
+      due_for_shoutout:   body.dueForShoutout   ?? false,
     })
     .eq("id", id)
     .select()
