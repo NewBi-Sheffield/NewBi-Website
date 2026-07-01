@@ -311,44 +311,58 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-5">
+            <div className="flex-1 overflow-y-auto flex flex-col min-h-0">
 
-              {/* Contact picker — only shown when adding */}
-              {!editing && (
-                <div className={labelCls}>
-                  <span className={labelTextCls}>Select from contacts</span>
-                  <div className="relative">
-                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#B09098]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <input
-                      value={contactSearch}
-                      onChange={(e) => setContactSearch(e.target.value)}
-                      placeholder="Search contacts by name or handle…"
-                      className="text-sm bg-[#FAF7F5] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#C0A8AF] rounded-xl pl-9 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 w-full"
-                    />
-                  </div>
-                  {contactSearch.trim() && (() => {
-                    const q = contactSearch.toLowerCase();
-                    const matches = contacts.filter((c) =>
-                      c.businessName.toLowerCase().includes(q) ||
-                      (c.instagramHandle ?? "").toLowerCase().includes(q)
-                    ).slice(0, 8);
-                    return matches.length > 0 ? (
-                      <div className="border border-[#2D1A1F]/10 rounded-xl overflow-hidden bg-white shadow-sm">
-                        {matches.map((c) => (
+              {/* Contact picker */}
+              <div className="px-5 pt-5 pb-3 flex flex-col gap-3">
+                <span className={labelTextCls}>Select a contact</span>
+                <div className="relative">
+                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#B09098]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    value={contactSearch}
+                    onChange={(e) => setContactSearch(e.target.value)}
+                    placeholder="Filter by name or handle…"
+                    className="text-sm bg-[#FAF7F5] border border-[#2D1A1F]/10 text-[#2D1A1F] placeholder-[#C0A8AF] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#C4909A]/40 w-full"
+                  />
+                </div>
+              </div>
+
+              {/* Scrollable contact list */}
+              {(() => {
+                const q = contactSearch.toLowerCase();
+                const visible = contacts.filter((c) =>
+                  !q ||
+                  c.businessName.toLowerCase().includes(q) ||
+                  (c.instagramHandle ?? "").toLowerCase().includes(q)
+                );
+                const selectedHandle = form.instagramHandle?.toLowerCase();
+                const selectedName = form.businessName?.toLowerCase();
+
+                return contacts.length > 0 ? (
+                  <div className="overflow-y-auto border-y border-[#2D1A1F]/8" style={{ maxHeight: "260px" }}>
+                    {visible.length === 0 ? (
+                      <p className="text-xs text-[#B09098] px-5 py-4">No contacts match.</p>
+                    ) : (
+                      visible.map((c) => {
+                        const isSelected = !!(
+                          (c.instagramHandle && c.instagramHandle.toLowerCase() === selectedHandle) ||
+                          (!c.instagramHandle && c.businessName.toLowerCase() === selectedName)
+                        );
+                        return (
                           <button
                             key={c.id}
                             type="button"
                             onClick={() => pickContact(c)}
-                            className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[#FAF7F5] transition-colors border-b border-[#2D1A1F]/6 last:border-0"
+                            className={`w-full flex items-center gap-3 px-5 py-3 text-left border-b border-[#2D1A1F]/6 last:border-0 transition-colors ${isSelected ? "bg-[#C4909A]/10" : "hover:bg-[#FAF7F5]"}`}
                           >
-                            <div className="w-7 h-7 rounded-full bg-[#F0D8DC] flex items-center justify-center shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-[#F0D8DC] flex items-center justify-center shrink-0">
                               <span className="text-xs font-bold text-[#A87580]">
                                 {(c.instagramHandle ?? c.businessName).charAt(0).toUpperCase()}
                               </span>
                             </div>
-                            <div className="min-w-0">
+                            <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-[#2D1A1F] truncate">
                                 {c.instagramHandle ? `@${c.instagramHandle}` : c.businessName}
                               </p>
@@ -356,83 +370,71 @@ function ShoutoutsScreen({ onOpenAdd }: { onOpenAdd: (fn: () => void) => void })
                                 <p className="text-xs text-[#9E7580] truncate">{c.businessName}</p>
                               )}
                             </div>
+                            {isSelected && (
+                              <svg className="w-4 h-4 text-[#C4909A] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
                           </button>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-[#B09098] px-1">No contacts match — fill in manually below.</p>
-                    );
-                  })()}
-                  {!contactSearch && (form.instagramHandle || form.businessName) && (
-                    <div className="flex items-center gap-2 px-3 py-2 bg-[#C4909A]/10 rounded-xl">
-                      <span className="text-sm text-[#6B4550] flex-1 truncate">
-                        {form.instagramHandle ? `@${form.instagramHandle}` : form.businessName}
-                        {form.instagramHandle && form.businessName ? ` · ${form.businessName}` : ""}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setForm((f) => ({ ...f, instagramHandle: "", businessName: "" }))}
-                        className="text-[#B09098] hover:text-[#2D1A1F] transition-colors shrink-0"
-                      >
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-3 mt-1">
-                    <div className="flex-1 h-px bg-[#2D1A1F]/8" />
-                    <span className="text-xs text-[#B09098]">or enter manually</span>
-                    <div className="flex-1 h-px bg-[#2D1A1F]/8" />
+                        );
+                      })
+                    )}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <p className="text-xs text-[#B09098] px-5 pb-3">No contacts in DB yet.</p>
+                );
+              })()}
 
-              {/* Instagram handle */}
-              <label className={labelCls}>
-                <span className={labelTextCls}>Instagram handle</span>
-                <div className="flex items-center bg-[#FAF7F5] border border-[#2D1A1F]/10 rounded-xl px-4 py-3 gap-2 focus-within:ring-2 focus-within:ring-[#C4909A]/40">
-                  <span className="text-[#B09098] text-base font-medium">@</span>
+              {/* Manual entry + date + notes */}
+              <div className="px-5 py-5 flex flex-col gap-5">
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-px bg-[#2D1A1F]/8" />
+                  <span className="text-xs text-[#B09098]">or enter manually</span>
+                  <div className="flex-1 h-px bg-[#2D1A1F]/8" />
+                </div>
+
+                <label className={labelCls}>
+                  <span className={labelTextCls}>Instagram handle</span>
+                  <div className="flex items-center bg-[#FAF7F5] border border-[#2D1A1F]/10 rounded-xl px-4 py-3 gap-2 focus-within:ring-2 focus-within:ring-[#C4909A]/40">
+                    <span className="text-[#B09098] text-base font-medium">@</span>
+                    <input
+                      value={form.instagramHandle ?? ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const igMatch = val.match(/instagram\.com\/([a-zA-Z0-9_.]+)/);
+                        if (igMatch) {
+                          const handle = igMatch[1];
+                          setForm((f) => ({ ...f, instagramHandle: handle, businessName: f.businessName || handle }));
+                        } else {
+                          setForm((f) => ({ ...f, instagramHandle: val.replace(/^@/, "") }));
+                        }
+                      }}
+                      placeholder="handle or instagram.com/…"
+                      className="text-base bg-transparent text-[#2D1A1F] placeholder-[#C0A8AF] flex-1 focus:outline-none"
+                    />
+                  </div>
+                </label>
+
+                <label className={labelCls}>
+                  <span className={labelTextCls}>Business name</span>
+                  <input value={form.businessName ?? ""} onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))} placeholder="e.g. Nails by Sophie" className={inputCls} />
+                </label>
+
+                <label className={labelCls}>
+                  <span className={labelTextCls}>Last shouted out</span>
                   <input
-                    value={form.instagramHandle ?? ""}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      const igMatch = val.match(/instagram\.com\/([a-zA-Z0-9_.]+)/);
-                      if (igMatch) {
-                        const handle = igMatch[1];
-                        setForm((f) => ({ ...f, instagramHandle: handle, businessName: f.businessName || handle }));
-                      } else {
-                        setForm((f) => ({ ...f, instagramHandle: val.replace(/^@/, "") }));
-                      }
-                    }}
-                    placeholder="handle or instagram.com/…"
-                    className="text-base bg-transparent text-[#2D1A1F] placeholder-[#C0A8AF] flex-1 focus:outline-none"
+                    type="date"
+                    value={form.lastShoutedAt ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, lastShoutedAt: e.target.value || undefined }))}
+                    className={inputCls}
                   />
-                </div>
-              </label>
+                </label>
 
-              {/* Business name */}
-              <label className={labelCls}>
-                <span className={labelTextCls}>Business name</span>
-                <input value={form.businessName ?? ""} onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))} placeholder="e.g. Nails by Sophie" className={inputCls} />
-              </label>
-
-              {/* Last shouted out date */}
-              <label className={labelCls}>
-                <span className={labelTextCls}>Last shouted out</span>
-                <input
-                  type="date"
-                  value={form.lastShoutedAt ?? ""}
-                  onChange={(e) => setForm((f) => ({ ...f, lastShoutedAt: e.target.value || undefined }))}
-                  className={inputCls}
-                />
-              </label>
-
-              {/* Notes */}
-              <label className={labelCls}>
-                <span className={labelTextCls}>Notes</span>
-                <textarea value={form.notes ?? ""} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} placeholder="Any notes about this provider…" rows={4} className={`${inputCls} resize-none`} />
-              </label>
+                <label className={labelCls}>
+                  <span className={labelTextCls}>Notes</span>
+                  <textarea value={form.notes ?? ""} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} placeholder="Any notes about this provider…" rows={3} className={`${inputCls} resize-none`} />
+                </label>
+              </div>
             </div>
 
             <div className="px-5 py-4 border-t border-[#2D1A1F]/8 flex gap-3">
